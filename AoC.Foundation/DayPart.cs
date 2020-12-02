@@ -23,5 +23,10 @@ namespace AoC.Foundation
             Console.WriteLine(solution);
             Console.ForegroundColor = ConsoleColor.White;
         }
+
+        public string ReadFile(string path)
+        {
+            return System.IO.File.ReadAllText(path);
+        }
     }
 }

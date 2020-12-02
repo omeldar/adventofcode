@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AoC.1_ReportRepair", "AoC.1
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AoC.Foundation", "AoC.Foundation\AoC.Foundation.csproj", "{75E5D461-08E8-4C83-93F8-3D98A11E9A9A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AoC.2_PasswordPhilosophy", "AoC.2_PasswordPhilosophy\AoC.2_PasswordPhilosophy.csproj", "{70B60A6B-5DAE-45AE-B79C-F773157A59A9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{75E5D461-08E8-4C83-93F8-3D98A11E9A9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75E5D461-08E8-4C83-93F8-3D98A11E9A9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{75E5D461-08E8-4C83-93F8-3D98A11E9A9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70B60A6B-5DAE-45AE-B79C-F773157A59A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70B60A6B-5DAE-45AE-B79C-F773157A59A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70B60A6B-5DAE-45AE-B79C-F773157A59A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70B60A6B-5DAE-45AE-B79C-F773157A59A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

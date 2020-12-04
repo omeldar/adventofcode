@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AoC.Foundation", "AoC.Found
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AoC.2_PasswordPhilosophy", "AoC.2_PasswordPhilosophy\AoC.2_PasswordPhilosophy.csproj", "{70B60A6B-5DAE-45AE-B79C-F773157A59A9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AoC.3_TobogganTrajectory", "AoC.3_TobogganTrajectory\AoC.3_TobogganTrajectory.csproj", "{66D8D31D-0CFF-4CC9-9A8B-E4E335D1DB25}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AoC.4_PassportProcessing", "AoC.4_PassportProcessing\AoC.4_PassportProcessing.csproj", "{4875C179-6370-46EA-9757-BA3CD7C81795}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{70B60A6B-5DAE-45AE-B79C-F773157A59A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{70B60A6B-5DAE-45AE-B79C-F773157A59A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{70B60A6B-5DAE-45AE-B79C-F773157A59A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66D8D31D-0CFF-4CC9-9A8B-E4E335D1DB25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66D8D31D-0CFF-4CC9-9A8B-E4E335D1DB25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66D8D31D-0CFF-4CC9-9A8B-E4E335D1DB25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66D8D31D-0CFF-4CC9-9A8B-E4E335D1DB25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4875C179-6370-46EA-9757-BA3CD7C81795}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4875C179-6370-46EA-9757-BA3CD7C81795}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4875C179-6370-46EA-9757-BA3CD7C81795}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4875C179-6370-46EA-9757-BA3CD7C81795}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

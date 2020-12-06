@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AoC.3_TobogganTrajectory", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AoC.4_PassportProcessing", "AoC.4_PassportProcessing\AoC.4_PassportProcessing.csproj", "{4875C179-6370-46EA-9757-BA3CD7C81795}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AoC.5_BinaryBoarding", "AoC.5_BinaryBoarding\AoC.5_BinaryBoarding.csproj", "{CBE6E80E-93BD-4AC0-B0B7-F8B11B4C39CC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AoC.6_CustomCustoms", "AoC.6_CustomCustoms\AoC.6_CustomCustoms.csproj", "{DBCC921D-6821-4141-A2EF-4DA5C4653E62}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,14 @@ Global
 		{4875C179-6370-46EA-9757-BA3CD7C81795}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4875C179-6370-46EA-9757-BA3CD7C81795}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4875C179-6370-46EA-9757-BA3CD7C81795}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBE6E80E-93BD-4AC0-B0B7-F8B11B4C39CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBE6E80E-93BD-4AC0-B0B7-F8B11B4C39CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBE6E80E-93BD-4AC0-B0B7-F8B11B4C39CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBE6E80E-93BD-4AC0-B0B7-F8B11B4C39CC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBCC921D-6821-4141-A2EF-4DA5C4653E62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBCC921D-6821-4141-A2EF-4DA5C4653E62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBCC921D-6821-4141-A2EF-4DA5C4653E62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBCC921D-6821-4141-A2EF-4DA5C4653E62}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

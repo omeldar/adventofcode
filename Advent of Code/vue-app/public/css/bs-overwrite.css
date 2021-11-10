@@ -1,0 +1,32 @@
+* {
+  font-family: '"Source Code Pro", monospace';
+}
+
+.aoc-link {
+  color: #009900;
+}
+
+.aoc-link:hover {
+  color: #99ff99;
+  cursor: pointer;
+}
+
+ul {
+  list-style-type: none;
+}
+
+template > div {
+  padding: 0;
+}
+
+.row {
+  margin: 0;
+}
+
+.row > div {
+  padding: 0;
+}
+
+#uiconsole {
+  overflow-y: auto;
+}

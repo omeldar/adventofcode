@@ -11,6 +11,19 @@
   cursor: pointer;
 }
 
+.aoc-glow{
+  text-shadow: 0 0 2px #00cc00, 0 0 5px #00cc00
+}
+
+.aoc-darkfield{
+  border: 1px solid #333340; 
+  background-color: #10101a;
+}
+
+[no-wrap]{
+  white-space: nowrap;
+}
+
 ul {
   list-style-type: none;
 }
@@ -27,6 +40,20 @@ template > div {
   padding: 0;
 }
 
-#uiconsole {
+[scrollable] {
   overflow-y: auto;
+}
+
+#editInputTA:focus{
+  border: 1px solid #333340; 
+  background-color: #10101a;
+}
+
+[clickable]{
+  cursor: pointer;
+}
+
+.aoc-button{
+  border: none;
+  background-color: transparent;
 }

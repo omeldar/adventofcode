@@ -3,7 +3,6 @@ import App from './App.vue'
 import VueClipboard from 'vue-clipboard2'
 
 Vue.config.productionTip = false
-Vue.config.silent = true
 
 Vue.use(VueClipboard)
 

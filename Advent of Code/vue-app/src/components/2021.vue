@@ -35,11 +35,22 @@
             </div>
 
             <!-- Console Entries -->
-            <div id="uiconsole" class="col-8 aoc-darkfield" style="height: 70vh;" scrollable>
-                <div class="aoc-link pl-2" v-for="log in uilogs" :key="log.data">
-                    {{ log.data }}
+            <div class="col-8">
+                <div id="uiconsole" class="aoc-darkfield" style="height: 70vh;" scrollable>
+                    <div class="aoc-link pl-2" v-for="log in uilogs" :key="log.data">
+                        {{ log.data }}
+                    </div>
+                </div>
+                <div class="d-flex mt-2">   
+                    <div>
+                        <div class="d-flex"><p>Time:</p><p class="ml-1">{{execTime}}</p></div>
+                    </div>
+                    <div class="ml-auto">
+                        <div class="aoc-link" v-on:click="clearConsole()"><p>[ Clear Console ]</p></div>
+                    </div>
                 </div>
             </div>
+
 
             <!-- Actions -->
             <div class="col-2">
@@ -47,13 +58,13 @@
                 <!-- Execute 1, Show Input -->
                 <div class="d-flex pl-4" style="font-size: 1.25em;">
                     <div class="d-flex aoc-link" v-on:click="execute(1)"><p >[</p><i class="la la-play" style="margin-top: 0.35em;"></i><p>Execute 1 ]</p></div>
-                    <div class="aoc-link pl-4" v-on:click="showInput()"><p>[ Show Input ]</p></div>
+                    <div class="aoc-link pl-4" v-on:click="showInput(1)"><p>[ Show Input 1 ]</p></div>
                 </div>
 
                 <!-- Execute 2, Clarn Console -->
                 <div class="d-flex pl-4" style="font-size: 1.25em;">
                     <div class="d-flex aoc-link" v-on:click="execute(2)"><p >[</p><i class="la la-play" style="margin-top: 0.35em;"></i><p>Execute 2 ]</p></div>
-                    <div class="aoc-link pl-4" v-on:click="clearConsole()"><p>[ Clear Console ]</p></div>
+                    <div class="aoc-link pl-4" v-on:click="showInput(2)"><p>[ Show Input 2 ]</p></div>
                 </div>
 
                 <!-- Error if there is one -->
@@ -92,15 +103,19 @@ export default {
         return {
             result: "n/a",
             uilogs: [
-                { "data": "AoC 21 > Advent of Code 2021" }
+                { "data": "AoC 21: > Advent of Code 2021" }
             ],
             currentDaySelection: null,
             userScrolled: false,
             inputs: [
-                { name: "Test 01", inputVal: "Test Input For UI and Functionality tests."}
+                { name: "Test 01", part: 1, inputVal: "Test Input 1 For UI and Functionality tests."},
+                { name: "Test 01", part: 2, inputVal: "Test Input 2 For UI and Functionality tests."}
             ],
             activeInput: null,
             editInputActive: false,
+            execTime: "n/a",
+            execTimerStart: null,
+            execTimerEnd: null,
             cancel: false,
             err: null
         }
@@ -113,20 +128,23 @@ export default {
             this.result = "n/a";
         },
         execute(part){
+            this.cancel = false;
             if(this.result == 'loading...'){
                 this.err = "You can not run 2 scripts at the same time. Wait or cancel running script.";
                 return -1;
             }
 
             this.result = 'loading...';
+            this.execTime = "calculating...";
+            this.execTimerStart = performance.now();
             switch (this.currentDaySelection) {
                 case 'Test 01':
                     switch(part) {
                         case 1:
-                            this.test01p1().then(data => this.result = data);
+                            this.test01p1().then(data => this.result = data).then(() => this.endExecStopwatch());
                             break;
                         case 2:
-                            this.test01p2().then(data => this.result = data);
+                            this.test01p2().then(data => this.result = data).then(() => this.endExecStopwatch());
                             break;
                         default:
                             this.log('No part ' + part + ' for ' + this.currentDaySelection + ' found.');
@@ -141,11 +159,19 @@ export default {
             }
             this.cancel = false;
         },
-        showInput() {
-            this.log('Input for ' + this.currentDaySelection + ': \'' + this.inputs.find(i => i.name == this.currentDaySelection).inputVal + '\'');
+        endExecStopwatch(){
+            this.execTimerEnd = performance.now();
+            this.execTime = (this.execTimerEnd - this.execTimerStart).toFixed(2) + " ms";
+        },
+        showInput(part) {
+            let input = this.inputs.find(i => i.name == this.currentDaySelection && i.part == part);
+            if(input){
+                this.log('Input for ' + this.currentDaySelection + ': \'' + input.inputVal + '\'');
+            } else {
+                this.log('No input found for ' + this.currentDaySelection);
+            }
         },
         log(message){
-            console.log(message);
             this.uilogs.push({"data": "AoC 21: > " + message});
         },
         sleep(ms){
@@ -155,6 +181,7 @@ export default {
         },
         clearConsole(){
             this.uilogs = [];
+            this.execTime = "n/a";
             this.log('Advent of Code 2021');
         },
         async test01p1(){
@@ -186,13 +213,15 @@ export default {
                     this.$nextTick(() => {
                         Array.from(document.querySelectorAll('#uiconsole > div')).pop().scrollIntoView();
                     })
-                } */
+                }*/
 
                 // if last not in view and no focus on scrollbar detected, continue:
 
+                
                 this.$nextTick(() => {
                     Array.from(document.querySelectorAll('#uiconsole > div')).pop().scrollIntoView();
                 })
+                
             }
         }   
     }

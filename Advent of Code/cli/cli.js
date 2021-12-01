@@ -7,8 +7,10 @@ function parseArgumentsIntoOptions(rawArgs) {
         {
             '--day': Number,
             '--part': Number,
+            '--show-input': Boolean,
             '-d': '--day',
             '-p': '--part',
+            '-s': '--show-input'
         },
         {
             argv: rawArgs.slice(2)
@@ -61,10 +63,10 @@ async function promptForMissingOptions(options){
 }
 
 export async function cli(args) {
-    console.clear();
-    console.log("🎄 Advent of Code CLI 🎄");
+    console.log("\n\n🎄 Advent of Code CLI 🎄");
     console.log("🎅 Ho Ho Hooo! Nice to see you. Ready to save christmas again?");
     let options = parseArgumentsIntoOptions(args);
     options = await promptForMissingOptions(options);
     runScript(options);
+    console.log("\n");
 }

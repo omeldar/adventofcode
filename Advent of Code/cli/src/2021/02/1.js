@@ -17,6 +17,7 @@ fs.readFile('input1.txt', 'utf8' , (err, data) => {
       //console.log(command);
   }
 
+  
   // run program
   let currentHorizontal = 0;
   let currentVertical = 0;

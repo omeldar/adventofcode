@@ -8,6 +8,7 @@ function parseArgumentsIntoOptions(rawArgs) {
             '--day': Number,
             '--part': Number,
             '--show-input': Boolean,
+            '--debug': Boolean,
             '-d': '--day',
             '-p': '--part',
             '-s': '--show-input'
@@ -19,7 +20,9 @@ function parseArgumentsIntoOptions(rawArgs) {
     return {
         day: args['--day'] || false,
         part: args['--part'] || false,
-        year: args._[0]
+        year: args._[0],
+        showInput: args['--show-input'] || false,
+        debug: args['--debug'] || false
     }
 }
 

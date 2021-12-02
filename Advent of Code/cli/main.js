@@ -9,11 +9,12 @@ export async function runScript(options) {
     else
         dayFormatted = options.day;
 
-    let pathInSrc = path.join(options.year.toString(), dayFormatted, options.part.toString());
+    let pathToData = path.join('../events', options.year.toString(), dayFormatted, options.part.toString());
+    console.log(pathToData);
     if(!options.showInput){ // if user did not specify to get only input
         exec("node " + options.part + '.js', 
         { 
-            cwd: path.join('src',options.year.toString(), dayFormatted )
+            cwd: path.join('../events',options.year.toString(), dayFormatted )
         }, 
         (error, stdout) => {
             if(error){
@@ -26,18 +27,19 @@ export async function runScript(options) {
                 }
             }
             if(stdout){
-                console.log(`🎅 ${pathInSrc}: ${stdout}`);
+                console.log(`🎅 ${pathToData}: ${stdout}`);
             }
         })
     }
     else{   // user specified to get input of that day
         let fileName = "input1.txt";
+        let _path = path.join('../events', options.year.toString(), dayFormatted);
         // if options.part is 2 and a file named input2.txt exists, use input2.txt. If not just input1.txt specified above will be used.
-        if(fs.existsSync(path.join('src', options.year.toString(), dayFormatted, 'input2.txt')) && options.part == 2)
+        if(fs.existsSync(path.join(_path, 'input2.txt')) && options.part == 2)
             fileName = "input2.txt";
         
         exec("type " + fileName, {
-            cwd: path.join('src',options.year.toString(), dayFormatted )
+            cwd: _path
         }, (error, stdout) => {
             if(error){
                 if(options.debug){
@@ -49,7 +51,7 @@ export async function runScript(options) {
                 }
             }
             if(stdout){
-                console.log(`🎅 ${pathInSrc} input: ${stdout}`);
+                console.log(`🎅 ${pathToData} input: ${stdout}`);
             }
         })
     }

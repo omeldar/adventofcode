@@ -1,6 +1,6 @@
 import arg from 'arg';
 import inquirer from 'inquirer';
-import { runScript } from './main'
+import { runScript } from '../main'
 
 function parseArgumentsIntoOptions(rawArgs) {
     const args = arg(

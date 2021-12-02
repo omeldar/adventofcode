@@ -66,7 +66,8 @@ async function promptForMissingOptions(options){
 }
 
 export async function cli(args) {
-    console.log("\n\n🎄 Advent of Code CLI 🎄");
+    console.clear();
+    console.log("🎄 Advent of Code CLI 🎄");
     console.log("🎅 Ho Ho Hooo! Nice to see you. Ready to save christmas again?");
     let options = parseArgumentsIntoOptions(args);
     options = await promptForMissingOptions(options);

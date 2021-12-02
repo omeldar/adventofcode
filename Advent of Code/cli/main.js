@@ -33,7 +33,7 @@ export async function runScript(options) {
     else{   // user specified to get input of that day
         let fileName = "input1.txt";
         // if options.part is 2 and a file named input2.txt exists, use input2.txt. If not just input1.txt specified above will be used.
-        if(fs.existsSync(path.join('src', ptions.year.toString(), dayFormatted, 'input2.txt')) && options.part == 2)
+        if(fs.existsSync(path.join('src', options.year.toString(), dayFormatted, 'input2.txt')) && options.part == 2)
             fileName = "input2.txt";
         
         exec("type " + fileName, {

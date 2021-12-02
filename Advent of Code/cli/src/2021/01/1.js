@@ -1,5 +1,4 @@
 const fs = require('fs');
-const { parse } = require('path');
 
 fs.readFile('input1.txt', 'utf8' , (err, data) => {
   if (err) {

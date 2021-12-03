@@ -27,7 +27,7 @@ export async function runScript(options) {
                 }
             }
             if(stdout){
-                console.log(`🎅 ${pathToData}: ${stdout}`);
+                console.log(`🎅 ${pathToData}: \n\n${stdout}`);
             }
         })
     }
@@ -40,7 +40,7 @@ export async function runScript(options) {
         
         exec("type " + fileName, {
             cwd: _path
-        }, (error, stdout) => {
+        }, (error, stdout, stderr) => {
             if(error){
                 if(options.debug){
                     console.error(error);
@@ -52,6 +52,9 @@ export async function runScript(options) {
             }
             if(stdout){
                 console.log(`🎅 ${pathToData} input: ${stdout}`);
+            }
+            if(stderr){
+                console.log(`Oops, something happened: ${stderr}`);
             }
         })
     }

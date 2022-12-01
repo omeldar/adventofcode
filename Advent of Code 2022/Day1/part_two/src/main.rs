@@ -4,9 +4,6 @@ fn main() {
     let filepath: String = String::from("input/input.txt");
     let string_data: String = read_file(filepath);
     let string_vector: Vec<&str> = string_data.lines().collect::<Vec<&str>>();
-
-    //println!("{:?}", string_vector);
-
     let mut number_vector: Vec<u32> = Vec::new();
 
     // Calculate sum of each elf and push sum into number vector to sort it later
@@ -25,7 +22,6 @@ fn main() {
     let number_vector: Vec<u32> = number_vector[number_vector.len() - 3..].to_vec();
     let sum:u32 = number_vector.iter().sum();
     println!("Sum of the top 3: {}", sum);
-
 }
 
 fn read_file(filepath: String) -> String {

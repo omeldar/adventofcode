@@ -38,13 +38,9 @@ fn main() {
         let char_as_digit = characters_that_appear_in_both_compartements[i] as u32;
         if char_as_digit > 96 {
             priority_sum += char_as_digit - 96;
-            println!("char: {}\nascii: {}\npriority: {}\ncurrent_sum: {}\n", 
-                characters_that_appear_in_both_compartements[i], char_as_digit, char_as_digit - 96, priority_sum);
         }
         else{
             priority_sum += (char_as_digit - 64) + 26;
-            println!("char: {}\nascii: {}\npriority: {}\ncurrent_sum: {}\n", 
-                characters_that_appear_in_both_compartements[i], char_as_digit, (char_as_digit - 64) + 26, priority_sum);
         }
     }
 

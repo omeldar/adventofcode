@@ -15,7 +15,7 @@ fn main() {
         .map(|l: &str| l.split(","))
         .map(|a| a.map(|s: &str| s.split("-").map(|u: &str| u.parse::<u32>().unwrap())
             .collect_tuple::<(_, _)>().unwrap()).collect_tuple::<(_, _)>().unwrap())
-        .filter(|t: &((u32, u32), (u32, u32))| (t.0.0.ge(&t.1.0) && t.0.1.le(&t.1.1)) || (t.1.0.ge(&t.0.0) && t.1.1.le(&t.0.1)))
+        .filter(|t: &((u32, u32), (u32, u32))| (t.0.0 >= t.1.0 && t.0.1 <= t.1.1) || (t.1.0 >= t.0.0 && t.1.1 <= t.0.1))
         .count();
 
     println!("result: {}", result);

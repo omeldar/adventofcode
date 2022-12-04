@@ -11,7 +11,6 @@ fn main() {
         .count();
 
     println!("result: {}", result);
-
 }
 
 fn read_file(filepath: String) -> String{

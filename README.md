@@ -1,3 +1,3 @@
 # Advent of Code 🎄
 
-This repository contains my solution of the [Advent of Code](https://adventofcode.com/) puzzles.
+This repository is home to my solutions for the [Advent of Code](https://adventofcode.com/) puzzles.

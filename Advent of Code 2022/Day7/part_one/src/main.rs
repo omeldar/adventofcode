@@ -1,8 +1,10 @@
 use std::fs;
 use std::collections::HashMap;
 use std::path::PathBuf;
+use std::time::Instant;
 
 fn main() {
+    let now = Instant::now();   // Starting stopwatch
     let data_as_string = read_file(String::from("input/input.txt"));
     let mut current_path = PathBuf::new();
     let mut directories: HashMap<PathBuf, u64> = HashMap::new();
@@ -38,6 +40,10 @@ fn main() {
         .map(|dir| if dir.1 <= &100000 {dir.1} else { &0 })
         .sum();
 
+    // Stopping stopwatch
+    let elapsed_ms = (now.elapsed().as_micros() as f64) / 1_000.0;
+
+    println!("elapsed: {} ms", elapsed_ms);
     println!("result: {}", result);
 }
 

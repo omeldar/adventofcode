@@ -27,6 +27,7 @@ fn main() {
                 directories.entry(current_path.clone()).and_modify(|size| *size += parse_result).or_insert(parse_result);
 
                 // add parseresult on all parent directories sizes
+                // I'm not proud of this:
                 let path: Vec<std::path::Component> = current_path.components().collect();
                 for i in 0..path.len() {
                     let mut parentpath: PathBuf = PathBuf::new();

@@ -1,4 +1,4 @@
-﻿namespace AoC
+﻿namespace AoC.AppHelpers
 {
     public static class UXHandler
     {
@@ -6,7 +6,7 @@
         {
             Console.Clear();
             char[] chars = header.ToCharArray();
-            foreach(char c in chars)
+            foreach (char c in chars)
             {
                 if (c == '_')
                     Console.ForegroundColor = ConsoleColor.DarkGray;
@@ -19,7 +19,7 @@
 
                 Console.Write(c);
 
-                Console.ForegroundColor= ConsoleColor.White;
+                Console.ForegroundColor = ConsoleColor.White;
             }
             Console.Write('\n');
         }

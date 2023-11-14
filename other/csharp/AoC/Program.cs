@@ -1,8 +1,7 @@
-﻿using AoC;
-using System.Diagnostics;
-using System.Reflection;
+﻿using AoC.AppHelpers;
 
 Console.Title = "Advent of Code Runner!";
+
 string header = @"
 _____/\\\\\\\\\_____________________________/\\\\\\\\\___        
  ___/\\\\\\\\\\\\\________________________/\\\////////____       
@@ -16,93 +15,65 @@ _____/\\\\\\\\\_____________________________/\\\\\\\\\___
                                                                  ";
 UXHandler.WriteHeader(header);
 
+string action = string.Empty;
+
+try
+{
+    action = args[0];
+} catch (Exception ex)
+{
+    Console.WriteLine("Action has not been provided.");
+    Console.WriteLine(ex.ToString());
+    Console.WriteLine("Program closing...");
+    Environment.Exit(-1);
+}
+
+// local variables and arguments
 int year = 0;
 int day = 0;
 bool timeUnitAlwaysNanoseconds = false;
 
-if(args.Length >= 2)
+InputGetter inputGetter = null!;
+
+AoCConfig configuration = new AoCConfig();
+
+switch (action)
 {
-    try
-    {
-        year = int.Parse(args[0]);
-        day = int.Parse(args[1]);
-        if (args.Length > 2)
-            timeUnitAlwaysNanoseconds = bool.Parse(args[2]);
-    } catch (Exception ex)
-    {
-        Console.WriteLine("Parsing arguments failed with exception:");
-        Console.WriteLine(ex.ToString());
-        Console.WriteLine("Program closing...");
-        Environment.Exit(-1);
-    }
+    case "run":
+        year = RunHelper.ReturnIntArgument(args, 1);
+        day = RunHelper.ReturnIntArgument(args, 2);
+        timeUnitAlwaysNanoseconds = false;
+        if (args.Length > 3)
+            timeUnitAlwaysNanoseconds = RunHelper.ReturnBoolArgument(args, 3);
+
+        SolutionRunner.Run(year, day, timeUnitAlwaysNanoseconds);
+        break;
+    case "get-input":
+        inputGetter ??= new InputGetter(configuration);
+        year = RunHelper.ReturnIntArgument(args, 1);
+        day = RunHelper.ReturnIntArgument(args, 2);
+        if (args.Length > 3)
+            configuration.Cookie = RunHelper.ReturnStringArgument(args, 3);
+        
+        await inputGetter.Get(year, day);
+
+        string filepath = $"{year}/Day{day}/input.txt";
+
+        if (File.Exists(filepath))
+            Console.WriteLine($"Input file '{filepath}' created successfully.");
+        break;
+    case "get-cookie":
+        Console.WriteLine($"Your cookie value is: {configuration.Cookie}");
+        break;
+    case "set-cookie":
+        configuration.Cookie = RunHelper.ReturnStringArgument(args, 1);
+        Console.WriteLine("Getting cookie value, so you can confirm setting cookie succeeded...");
+        Console.WriteLine($"Cookie value now: '{configuration.Cookie}'");
+        break;
+    default:
+        Console.WriteLine($"No action '{action}' found.");
+        break;
 }
-else
-{
-    Console.WriteLine("Not all necessary arguments provided. Minimum required arguments are 2: $run <year> <day> <part>");
-    Environment.Exit(-1);
-}
 
-Console.WriteLine($"Running AoC solution of year {year}, day {day}");
-
-string nameSpace = $"AoC._{year}.Day{day}";
-Type[] types = RunHelper.GetTypesInNamespace(Assembly.GetExecutingAssembly(), nameSpace);
-
-if (types.Length is 0)
-{
-    Console.WriteLine($"found {types.Length} types in namespace {nameSpace}. Solution for this day might not yet be created. Program is closing.");
-    Environment.Exit(-1);
-}
-
-foreach (Type type in types)
-{
-    // Create an instance of the type
-    object instance = Activator.CreateInstance(type) ?? throw new Exception($"Instance of type {type} could not be created.");
-
-    // Assume there's a method called GetStringValue in each class
-    // You can change this to match your method name or constructor logic
-    MethodInfo method = type.GetMethod("Run") ?? throw new Exception($"Method 'Run' not implemented in type {type}.");
-
-    if (method is not null && instance is not null)
-    {
-        // Start Stopwatch
-        var watch = System.Diagnostics.Stopwatch.StartNew();
-
-        // Invoke the method and get the result
-        string result = (string)(method.Invoke(instance, null) ?? throw new Exception(""));
-        watch.Stop();
-
-        double ticks = watch.ElapsedTicks;
-        double ns = (watch.ElapsedTicks / Stopwatch.Frequency) * 1000000000;
-        string time = ns.ToString();
-        string unit = "ns";
-
-        if (ns > 10000 && !timeUnitAlwaysNanoseconds)
-        {
-            double ms = (double)ns / 1000;
-            time = ms.ToString();
-            unit = "ms";
-        }
-
-        if (ns < 10 && !timeUnitAlwaysNanoseconds)
-        {
-            time = ticks.ToString();
-            unit = "ticks";
-        }
-
-        string runner = "<namespace not found> ";
-        if (type.Namespace is not null)
-            runner = type.Namespace.Split(".")[1].Substring(1) + " " + type.Namespace.Split(".")[2] + " " + type.Name + " ";
-
-        // Display result to user
-        Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.Write($"{runner}");
-        Console.ForegroundColor = ConsoleColor.White;
-        Console.WriteLine("created result:");
-        Console.ForegroundColor = ConsoleColor.Green;
-        Console.WriteLine($"\t{result}");
-        Console.ForegroundColor = ConsoleColor.DarkBlue;
-        Console.WriteLine($"\tin {time} {unit}");
-        Console.ForegroundColor = ConsoleColor.White;
-    }
-}
 Console.WriteLine("Program is ending.");
+Environment.Exit(1);

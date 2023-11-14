@@ -15,12 +15,12 @@ namespace AoC._2016.Day1
             
             Compass<string> compass = new Compass<string>(new string[] { "N", "E", "S", "W" });
 
-            List<string> instructions_compass = instructions
+            instructions
                 .Select(i => (compass.MoveAndGet(i.First() == 'L' ? Direction.Left : Direction.Right) + i.Substring(1)))
-                .ToList();
+                .ToList()
+                .Select(i => (i[0] == 'N') ? (y += int.Parse(i[1..])) : ((i[0] == 'E') ? (x += int.Parse(i[1..])) : ((i[0] == 'S') ? (y -= int.Parse(i[1..])) : (x -= int.Parse(i[1..])))));
 
-            instructions_compass.ForEach(i => Console.WriteLine(i));
-
+            Console.WriteLine($"{x}, {y}");
             return (x + y).ToString();
         }
     }

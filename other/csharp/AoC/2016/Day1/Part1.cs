@@ -8,7 +8,7 @@ namespace AoC._2016.Day1
     {
         public string Run(string input)
         {
-            List<string> instructions = input.Split(',').ToList();
+            List<string> instructions = input.Split(", ").ToList();
 
             int x = 0;
             int y = 0;

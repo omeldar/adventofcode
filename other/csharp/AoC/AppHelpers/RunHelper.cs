@@ -29,7 +29,9 @@ namespace AoC.AppHelpers
         {
             return
               assembly.GetTypes()
-                      .Where(t => string.Equals(t.Namespace, nameSpace, StringComparison.Ordinal))
+                      .Where(t => string.Equals(t.Namespace, nameSpace, StringComparison.Ordinal) &&
+                        !t.Name.Contains("<>") && // Exclude types with "<>" in their names
+                        !t.Name.Contains("__DisplayClass"))
                       .ToArray()
                       ?? throw new Exception("No types found in given namespace");
         }
@@ -53,7 +55,10 @@ namespace AoC.AppHelpers
         {
             try
             {
-                return int.Parse(args[index]);
+                if (args.Length > index)
+                    return int.Parse(args[index]);
+
+                throw new Exception("Not enough arguments provided");
             }
             catch (Exception e)
             {

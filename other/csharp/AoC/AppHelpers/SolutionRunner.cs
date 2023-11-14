@@ -1,11 +1,12 @@
-﻿using System.Diagnostics;
+﻿using AoC.SolutionHelpers;
+using System.Diagnostics;
 using System.Reflection;
 
 namespace AoC.AppHelpers
 {
     public class SolutionRunner
     {
-        public static void Run(int year, int day, bool timeUnitAlwaysNanoseconds)
+        public static string Run(int year, int day, bool timeUnitAlwaysNanoseconds)
         {
             Console.WriteLine($"Running AoC solution of year {year}, day {day}");
 
@@ -17,9 +18,12 @@ namespace AoC.AppHelpers
                 Console.WriteLine($"found {types.Length} types in namespace {nameSpace}. Solution for this day might not yet be created. Program is closing.");
                 Environment.Exit(-1);
             }
+            string[] results = new string[types.Length];
+            int part = 0;
 
             foreach (Type type in types)
             {
+                Console.WriteLine($"Name: {type.Name},\t Namespace: {type.Namespace}");
                 // Create an instance of the type
                 object instance = Activator.CreateInstance(type) ?? throw new Exception($"Instance of type {type} could not be created.");
 
@@ -33,8 +37,16 @@ namespace AoC.AppHelpers
                     var watch = Stopwatch.StartNew();
 
                     // Invoke the method and get the result
-                    string result = (string)(method.Invoke(instance, null) ?? throw new Exception(""));
+                    string baseUrl = string.Empty;
+#if DEBUG
+                    baseUrl = "../../../";
+#endif
+
+                    string result = (string)(method.Invoke(instance, new object[] 
+                        { AoCFileReader.ReadAsString($"{baseUrl}{year}/Day{day}/input.txt") }) ?? throw new Exception(""));
                     watch.Stop();
+
+                    results[part] = result;
 
                     double ticks = watch.ElapsedTicks;
                     double ns = watch.ElapsedTicks / Stopwatch.Frequency * 1000000000;
@@ -69,7 +81,9 @@ namespace AoC.AppHelpers
                     Console.WriteLine($"\tin {time} {unit}");
                     Console.ForegroundColor = ConsoleColor.White;
                 }
+                part++;
             }
+            return results[results.Length - 1];
         }
     }
 }

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "AoC 2016 1": {
+      "commandName": "Project",
+      "commandLineArgs": "run 2016 1"
+    }
+  }
+}

@@ -56,11 +56,21 @@ namespace AoC.AppHelpers
             }
         }
 
+        /// <summary>
+        /// Result of last executed AoC solution
+        /// </summary>
         public string LastResult
         {
             get
             {
-
+                return ConfigurationManager.AppSettings.Get("LastResult") ?? string.Empty;
+            }
+            set
+            {
+                Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+                config.AppSettings.Settings["LastResult"].Value = value;
+                config.Save(ConfigurationSaveMode.Modified);
+                ConfigurationManager.RefreshSection("appSettings");
             }
         }
 

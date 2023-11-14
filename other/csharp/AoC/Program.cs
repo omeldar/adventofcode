@@ -20,7 +20,8 @@ string action = string.Empty;
 try
 {
     action = args[0];
-} catch (Exception ex)
+}
+catch (Exception ex)
 {
     Console.WriteLine("Action has not been provided.");
     Console.WriteLine(ex.ToString());
@@ -31,6 +32,7 @@ try
 // local variables and arguments
 int year = 0;
 int day = 0;
+int part = 0;
 bool timeUnitAlwaysNanoseconds = false;
 
 InputGetter inputGetter = null!;
@@ -46,7 +48,11 @@ switch (action)
         if (args.Length > 3)
             timeUnitAlwaysNanoseconds = RunHelper.ReturnBoolArgument(args, 3);
 
-        SolutionRunner.Run(year, day, timeUnitAlwaysNanoseconds);
+        string result = SolutionRunner.Run(year, day, timeUnitAlwaysNanoseconds);
+        configuration.LastResult = result;
+
+        Console.Write($"\nResult of last solution has been saved for posting.\n\tCurrent Value:\n\t");
+        UXHandler.WriteInColor($"{configuration.LastResult}", ConsoleColor.Magenta, true);
         break;
     case "get-input":
         inputGetter ??= new InputGetter(configuration);
@@ -54,7 +60,7 @@ switch (action)
         day = RunHelper.ReturnIntArgument(args, 2);
         if (args.Length > 3)
             configuration.Cookie = RunHelper.ReturnStringArgument(args, 3);
-        
+
         await inputGetter.Get(year, day);
 
         string filepath = $"{year}/Day{day}/input.txt";
@@ -70,10 +76,30 @@ switch (action)
         Console.WriteLine("Getting cookie value, so you can confirm setting cookie succeeded...");
         Console.WriteLine($"Cookie value now: '{configuration.Cookie}'");
         break;
+    case "post-answer":
+        year = RunHelper.ReturnIntArgument(args, 1);
+        day = RunHelper.ReturnIntArgument(args, 2);
+        part = RunHelper.ReturnIntArgument(args, 3);
+        OutputPoster poster = new OutputPoster(configuration);
+
+        int httpCode = await poster.Post(year, day, part);
+
+        UXHandler.WriteHttpResult(httpCode);
+        break;
+    case "help":
+        Console.WriteLine(":: run\t<year | int>\t<day | int>\t<timeUnitAlwaysNanoseconds | boolean?>\n");
+        Console.WriteLine(":: get-input\t<year | int>\t<day | int>\t<session | string>\n");
+        Console.WriteLine(":: get-cookie\t\n");
+        Console.WriteLine(":: set-cookie\t<session | string>\n");
+        Console.WriteLine(":: post-answer\t<year | int>\t<day | int>\t<part | int>\n");
+        break;
     default:
         Console.WriteLine($"No action '{action}' found.");
         break;
 }
 
 Console.WriteLine("Program is ending.");
+#if DEBUG
+Console.ReadKey();
+#endif
 Environment.Exit(1);

@@ -38,9 +38,6 @@ namespace AoC.AppHelpers
 
                     // Invoke the method and get the result
                     string baseUrl = string.Empty;
-#if DEBUG
-                    baseUrl = "../../../";
-#endif
 
                     string result = (string)(method.Invoke(instance, new object[] 
                         { AoCFileReader.ReadAsString($"{baseUrl}{year}/Day{day}/input.txt") }) ?? throw new Exception(""));

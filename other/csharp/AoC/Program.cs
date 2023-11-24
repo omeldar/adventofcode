@@ -100,6 +100,7 @@ switch (action)
 
 Console.WriteLine("Program is ending.");
 #if DEBUG
+Console.WriteLine("Press a key to exit program.");
 Console.ReadKey();
 #endif
 Environment.Exit(1);

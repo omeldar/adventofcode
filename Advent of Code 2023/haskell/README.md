@@ -1,0 +1,3 @@
+# Haskell solutions
+
+Its my first time using haskell (but a tutorial I did). So it was kind of hart wrapping my mind about the declarative style of programming since I've never done it before. My solutions aren't the best ones but I tried ...

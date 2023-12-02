@@ -55,7 +55,7 @@ createRGB pull
     | otherwise = (0, 0, value)
     where 
         [valueStr, color] = words pull
-        value = fromIntegral (read valueStr :: Int)
+        value = read valueStr
 
 splitOnChar :: Char -> String -> [String]
 splitOnChar char str

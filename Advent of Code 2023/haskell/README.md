@@ -63,7 +63,11 @@ Part 2: Only find the values located next to the symbol `*`, where there is only
 
 ## Day 04
 
-Analyze the worth of scratching cards.
+Analyze scratching cards.
+
+Part 1: Sum of the values of all scratchcards. A scratchcard with one matching number, is worth one. For each other matching number, the value duplicates.
+
+Part 2: Instead of the scratchcard having a value, the matching numbers determine the scratchcards you get 1 more of. Each of that copies of the scratchcards, generate more copies of following scratchcards. The result is the sum of all scratchcards.
 
 ```
 Card 1: 41 48 83 86 17 | 83 86  6 31 17  9 48 53

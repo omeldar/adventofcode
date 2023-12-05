@@ -1,14 +1,15 @@
-import Data.List.Split (splitOn)
+import Data.List.Split (splitOn, chunksOf)
 import Debug.Trace (trace)
 
 type FromToRange = (Int, Int, Int)
 
 main = do
-    inputAsT <- chunks <$> readFile "input.txt"
+    inputAsT <- chunks <$> readFile "test.txt"
     let input = map lines inputAsT
-        seeds = getSeeds input
         ranges = getRanges input
-    print $ minimum $ map (\s -> calculateLocation s ranges) seeds
+        seeds = getSeeds input
+    --print $ minimum $ map (\s -> calculateLocation s ranges) seeds
+    print $ minimum $ forSeeds (chunksOf 2 seeds) ranges
 
 -- PART 1
 calculateLocation :: Int -> [[FromToRange]] -> Int
@@ -27,9 +28,13 @@ calculateLocation currSeedVal (mapper:mappers) = calculateLocation (getNewValue 
                 validRanges = filter (\r -> first r /= -1) $ map (\range -> if isValidRange seed range then range else (-1,-1,-1)) ranges
 
 -- PART 2
-
+forSeeds :: [[Int]] -> [[FromToRange]] -> [Int]
+forSeeds seedChunks ranges = map (\sr -> minimum $ map (\s -> calculateLocation s ranges) sr) seedRanges
+    where
+        seedRanges = map (\c -> [head c..(head c + last c)]) seedChunks
 
 -- PARSING & HELPERMETHODS
+-- HELPER
 first :: (a, b, c) -> a  
 first (x, _, _) = x  
   
@@ -39,6 +44,7 @@ second (_, y, _) = y
 third :: (a, b, c) -> c  
 third (_, _, z) = z  
 
+-- PARSING
 getSeeds :: [[String]] -> [Int]
 getSeeds input = map (\n -> read n) $ drop 1 $ words $ head $ head input
 

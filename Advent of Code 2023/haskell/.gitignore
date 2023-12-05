@@ -1,3 +1,6 @@
 test.txt
 input.txt
 notes.txt
+*.exe
+*.hi
+*.o

@@ -4,11 +4,11 @@ import Debug.Trace (trace)
 type FromToRange = (Int, Int, Int)
 
 main = do
-    inputAsT <- chunks <$> readFile "test.txt"
+    inputAsT <- chunks <$> readFile "input.txt"
     let input = map lines inputAsT
         ranges = getRanges input
         seeds = getSeeds input
-    --print $ minimum $ map (\s -> calculateLocation s ranges) seeds
+    print $ minimum $ map (\s -> calculateLocation s ranges) seeds
     print $ minimum $ forSeeds (chunksOf 2 seeds) ranges
 
 -- PART 1
@@ -19,17 +19,15 @@ calculateLocation currSeedVal (mapper:mappers) = calculateLocation (getNewValue 
         isValidRange :: Int -> FromToRange -> Bool
         isValidRange seed range = if (seed >= second range && seed <= second range + third range) then True else False
 
-        getNewFromValidRange :: Int -> FromToRange -> Int
-        getNewFromValidRange seed range = first range + seed - (second range)
-
         getNewValue :: Int -> [FromToRange] -> Int
-        getNewValue seed ranges = if (validRanges == []) then seed else getNewFromValidRange currSeedVal $ head $ validRanges
-            where
-                validRanges = filter (\r -> first r /= -1) $ map (\range -> if isValidRange seed range then range else (-1,-1,-1)) ranges
+        getNewValue seed [] = seed
+        getNewValue seed (range:ranges)
+            | isValidRange seed range = first range + seed - (second range)
+            | otherwise = getNewValue seed ranges
 
 -- PART 2
 forSeeds :: [[Int]] -> [[FromToRange]] -> [Int]
-forSeeds seedChunks ranges = map (\sr -> minimum $ map (\s -> calculateLocation s ranges) sr) seedRanges
+forSeeds seedChunks ranges = map (\sr -> minimum $ map (\s -> trace "." calculateLocation s ranges) sr) seedRanges
     where
         seedRanges = map (\c -> [head c..(head c + last c)]) seedChunks
 

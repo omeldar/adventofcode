@@ -17,7 +17,7 @@ calculateLocation currSeedVal [] = currSeedVal
 calculateLocation currSeedVal (mapper:mappers) = calculateLocation (getNewValue currSeedVal $ mapper) mappers
     where
         isValidRange :: Int -> FromToRange -> Bool
-        isValidRange seed range = if (seed >= second range && seed <= second range + third range) then True else False
+        isValidRange seed range = (seed >= second range && seed <= second range + third range)
 
         getNewValue :: Int -> [FromToRange] -> Int
         getNewValue seed [] = seed
@@ -27,11 +27,13 @@ calculateLocation currSeedVal (mapper:mappers) = calculateLocation (getNewValue 
 
 -- PART 2
 forSeeds :: [[Int]] -> [[FromToRange]] -> [Int]
-forSeeds seedChunks ranges = map (\sr -> minimum $ map (\s -> trace "." calculateLocation s ranges) sr) seedRanges
+forSeeds seedChunks ranges = map (\sr -> minimum $ map (\s -> calculateLocation s ranges) sr) seedRanges
     where
-        seedRanges = map (\c -> [head c..(head c + last c)]) seedChunks
+        seedRanges = map (\c -> [head c..((head c + last c) -1)]) seedChunks
 
 -- PARSING & HELPERMETHODS
+-- OPTIMIZATION
+
 -- HELPER
 first :: (a, b, c) -> a  
 first (x, _, _) = x  

@@ -8,8 +8,8 @@ main = do
     let input = map lines inputAsT
         ranges = getRanges input
         seeds = getSeeds input
-    print $ minimum $ map (\s -> calculateLocation s ranges) seeds
-    print $ minimum $ forSeeds (chunksOf 2 seeds) ranges
+    print $ minimum $ map (\s -> calculateLocation s ranges) seeds -- ~0.01s
+    print $ minimum $ forSeeds (chunksOf 2 seeds) ranges    -- ~2h15m (when compiled)
 
 -- PART 1
 calculateLocation :: Int -> [[FromToRange]] -> Int
@@ -32,8 +32,6 @@ forSeeds seedChunks ranges = map (\sr -> minimum $ map (\s -> calculateLocation 
         seedRanges = map (\c -> [head c..((head c + last c) -1)]) seedChunks
 
 -- PARSING & HELPERMETHODS
--- OPTIMIZATION
-
 -- HELPER
 first :: (a, b, c) -> a  
 first (x, _, _) = x  

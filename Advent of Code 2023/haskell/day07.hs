@@ -1,5 +1,5 @@
 import Data.Char (isDigit, digitToInt)
-import Data.List (group, sort, sortBy)
+import Data.List (sortBy)
 import Data.Map (fromListWith, toList)
 import Debug.Trace (trace)
 

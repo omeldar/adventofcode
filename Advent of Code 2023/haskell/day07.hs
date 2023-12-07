@@ -9,10 +9,20 @@ type Hand = ([Int], Int)
 main = do
     input <- lines <$> readFile "test.txt"
     let hands = map mapStrHToH input
-    print $ map (\hand -> evalHandType $ fst hand) hands
+    print $ totalWinnings hands
 
 -- PART 1
+totalWinnings :: [Hand] -> Int
+totalWinnings hands = 0 -- use sorted list and calculate here
 
+-- PART 2
+
+-- HELPER FUNCTIONS
+frequency :: (Ord a) => [a] -> [(a, Int)]
+frequency xs = toList (fromListWith (+) [(x, 1) | x <- xs])
+
+sortByFrequency :: Ord b => [(a, b)] -> [(a, b)]
+sortByFrequency = sortBy (\(_,count1) (_,count2) -> compare count2 count1)
 
 evalHandType :: [Int] -> Int
 evalHandType hand = case map snd $ sortByFrequency $ frequency hand of
@@ -24,12 +34,8 @@ evalHandType hand = case map snd $ sortByFrequency $ frequency hand of
         [2, 1, 1, 1] -> 1  -- one pair
         _ -> 0    -- nothing
 
--- HELPER FUNCTIONS
-frequency :: (Ord a) => [a] -> [(a, Int)]
-frequency xs = toList (fromListWith (+) [(x, 1) | x <- xs])
-
-sortByFrequency :: Ord b => [(a, b)] -> [(a, b)]
-sortByFrequency = sortBy (\(_,count1) (_,count2) -> compare count2 count1)
+sortByTypeAndCardVal :: [Hand] -> [Hand]
+sortByTypeAndCardVal hands = hands -- sort here
 
 -- PARSING
 mapCtoValue :: Char -> Int

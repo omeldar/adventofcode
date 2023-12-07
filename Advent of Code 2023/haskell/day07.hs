@@ -8,19 +8,14 @@ type Hand = ([Int], Int)
 
 main = do
     input <- lines <$> readFile "test.txt"
-    print $ input
+    let hands = map mapStrHToH input
+    print $ map (\hand -> evalHandType $ fst hand) hands
 
--- HELPER FUNCTIONS
-frequency :: (Ord a) => [a] -> [(a, Int)]
-frequency xs = toList (fromListWith (+) [(x, 1) | x <- xs])
+-- PART 1
 
-sortByFrequency :: Ord b => [(a, b)] -> [(a, b)]
-sortByFrequency = sortBy (\(_,count1) (_,count2) -> compare count2 count1)
 
 evalHandType :: [Int] -> Int
-evalHandType hand =
-    let sortedOccurences = sortByFrequency $ frequency hand
-    in case map snd sortedOccurences of
+evalHandType hand = case map snd $ sortByFrequency $ frequency hand of
         [5] -> 6   -- five of a kind
         [4, 1] -> 5  -- four of a kind
         [3, 2] -> 4    -- full house
@@ -28,6 +23,13 @@ evalHandType hand =
         [2, 2, 1] -> 2 -- two pair
         [2, 1, 1, 1] -> 1  -- one pair
         _ -> 0    -- nothing
+
+-- HELPER FUNCTIONS
+frequency :: (Ord a) => [a] -> [(a, Int)]
+frequency xs = toList (fromListWith (+) [(x, 1) | x <- xs])
+
+sortByFrequency :: Ord b => [(a, b)] -> [(a, b)]
+sortByFrequency = sortBy (\(_,count1) (_,count2) -> compare count2 count1)
 
 -- PARSING
 mapCtoValue :: Char -> Int
@@ -38,8 +40,7 @@ mapCtoValue c = case c of
     'J' -> 11
     'T' -> 10
 
-mapStringHandToHand :: String -> Hand
-mapStringHandToHand handString = (cards, bid)
+mapStrHToH :: String -> Hand
+mapStrHToH handString = (cards, read $ last $ words handString)
     where
         cards = map (\c -> if isDigit c then digitToInt c else mapCtoValue c) $ head $ words handString
-        bid = read $ last $ words handString

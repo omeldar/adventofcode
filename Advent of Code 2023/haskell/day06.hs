@@ -1,3 +1,5 @@
+import Debug.Trace (trace)
+
 type Race = (Int, Int)
 
 main = do
@@ -12,11 +14,11 @@ main = do
 
 -- formula described in readme, not working yet
 calculateSolutions :: Race -> Int
-calculateSolutions race = (x1 - x2) `div` (2 * (-1))
+calculateSolutions race = trace (show delta) x1 - x2
     where
-        t = fst race
-        r = snd race
-        x1 = ceiling $ fromIntegral (-t) + sqrt (fromIntegral delta)
-        x2 = floor $ fromIntegral (-t) - sqrt (fromIntegral delta)
-        delta :: Int
-        delta = fromIntegral (t^2+4*r)
+        t = fromIntegral $ fst race
+        r = fromIntegral $ snd race
+        x1 = ceiling $ ((-t) + sqrt (delta) / (-2.0))
+        x2 = floor $ ((-t) - sqrt (delta) / (-2.0))
+        delta :: Double
+        delta = (t^2-4*r)

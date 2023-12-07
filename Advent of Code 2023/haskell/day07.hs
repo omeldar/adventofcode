@@ -20,13 +20,13 @@ sortByFrequency = sortBy (\(_,count1) (_,count2) -> compare count2 count1)
 evalHandType :: [Int] -> Int
 evalHandType hand =
     let sortedOccurences = sortByFrequency $ frequency hand
-    in case (map snd sortedOccurences, length sortedOccurences) of
-        ([5], 1) -> 6   -- five of a kind
-        ([4, 1], 2) -> 5  -- four of a kind
-        ([3, 2], 2) -> 4    -- full house
-        ([3, 1, 1], 3) -> 3 -- three of a kind
-        ([2, 2, 1], 3) -> 2 -- two pair
-        ([2, 1, 1, 1], 4) -> 1  -- one pair
+    in case map snd sortedOccurences of
+        [5] -> 6   -- five of a kind
+        [4, 1] -> 5  -- four of a kind
+        [3, 2] -> 4    -- full house
+        [3, 1, 1] -> 3 -- three of a kind
+        [2, 2, 1] -> 2 -- two pair
+        [2, 1, 1, 1] -> 1  -- one pair
         _ -> 0    -- nothing
 
 -- PARSING

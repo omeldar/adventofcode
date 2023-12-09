@@ -4,6 +4,4 @@ main = do
     print $ sum $ map getNext $ map reverse input
 
 getNext :: [Int] -> Int
-getNext nums
-    | all (== 0) nums = 0
-    | otherwise = last nums + (getNext $ zipWith (-) (tail nums) nums)
+getNext nums = if all (== 0) nums then 0 else last nums + (getNext $ zipWith (-) (tail nums) nums)

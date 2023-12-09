@@ -1,5 +1,5 @@
 main = do
-    input <- map (map (read :: String -> Int) . words) . lines <$> readFile "input.txt"
+    input <- map (map read . words) . lines <$> readFile "input.txt"
     print $ sum $ map getNext input
     print $ sum $ map getNext $ map reverse input
 

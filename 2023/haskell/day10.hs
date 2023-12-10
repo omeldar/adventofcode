@@ -9,20 +9,21 @@ type GridElement = (Coord, Char)
 
 main = do
     input <- scale . lines <$> readFile "test.txt"
-    let grid = createGrid input
-        xB = length $ head input
-        yB = length input
+    let inputWithOuterOs = addOuterOs input
+        grid = createGrid inputWithOuterOs
+        xB = length $ head inputWithOuterOs
+        yB = length inputWithOuterOs
         pipeMap = M.fromList grid
         startEl = fromJust $ find start grid
         coordsAdjToStart = filter (\c -> c `elem` pipeOpenings startEl) $ neighbours $ fst startEl
         pipesAdjToStart = map (\c -> (c, fromJust $ M.lookup c pipeMap)) coordsAdjToStart
         pipesOfLoop = loopPipe pipeMap (head $ pipesAdjToStart) startEl (head $ pipesAdjToStart) S.empty
         floodedSet = floodFill [(0,0)] (xB, yB) S.empty pipesOfLoop
-        dotCount = allPoints input 0
+        dotCount = allPoints inputWithOuterOs 0
         floodDotCount = floodedPoints (S.toList floodedSet) pipeMap 0
+    writeFile "out.txt" $ intercalate "\n" $ inputWithOuterOs -- If you want to output a visualization - upscaled grid of pipes
     print $ (S.size pipesOfLoop) `div` 4
     print $ dotCount - floodDotCount
-    writeFile "out.txt" $ intercalate "\n" $ input -- If you want to output a visualization - upscaled grid of pipes
 
 -- PART 1
 loopPipe :: M.Map Coord Char -> GridElement -> GridElement -> GridElement -> S.Set Coord -> S.Set Coord
@@ -68,6 +69,11 @@ floodedPoints [] _ count = count
 floodedPoints (coord:coords) pipeMap count = floodedPoints coords pipeMap newDotCount
     where
         newDotCount = if '.' == (fromJust $ M.lookup coord pipeMap) then (count + 1) else count
+
+addOuterOs :: [String] -> [String]
+addOuterOs input = map (\line -> line ++ "o") input ++ [replicate xLength 'o']
+    where
+        xLength = 1 + (length $ head input)
 
 -- PART 2 HELPER METHODS
 scale :: [String] -> [String]

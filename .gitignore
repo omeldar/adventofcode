@@ -1,6 +1,4 @@
-test.txt
-input.txt
-notes.txt
+*.txt
 *.exe
 *.hi
 *.o

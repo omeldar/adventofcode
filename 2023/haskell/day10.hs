@@ -36,6 +36,8 @@ pipeOpenings ((currX, currY), c)
     | c == '7' = [(currX - 1, currY), (currX, currY + 1)] -- ┐ 
     | c == 'F' = [(currX + 1, currY), (currX, currY + 1)] -- ┌
 
+-- TODO: Implement function to determine what S should be
+
 -- HELPER METHODS
 start :: GridElement -> Bool
 start ((_,_), 'S') = True

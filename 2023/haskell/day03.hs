@@ -8,8 +8,8 @@ main = do
     print $ processGrid input
     print $ processGrid2 input
 
-neighbors :: Coord -> [Coord]
-neighbors (x, y) =
+neighbours :: Coord -> [Coord]
+neighbours (x, y) =
     [(x + dx, y + dy) | dy <- [-1, 0, 1], dx <- [-1, 0, 1], (dx, dy) /= (0, 0)]
 
 withinBounds :: Int -> Int -> Coord -> Bool
@@ -36,7 +36,7 @@ buildConnectedDigits input coord = read (reverse leftDigits ++ [valueAt input co
 
 findSumAdjacentNumbers :: [String] -> Coord -> Int
 findSumAdjacentNumbers input coord =  
-    let adjacentCoords = filter (withinBounds (length (head input)) (length input)) (neighbors coord)
+    let adjacentCoords = filter (withinBounds (length (head input)) (length input)) (neighbours coord)
         adjacentDigitCoords = [coord | coord <- adjacentCoords, isDigit $ valueAt input coord]
         adjacentValues = map (\c -> buildConnectedDigits input c) adjacentDigitCoords -- map char of adjacent coords (reading values)
     in sum $ nub adjacentValues
@@ -56,7 +56,7 @@ isSymbol2 c = c == '*'
 
 findSumAdjacentNumbers2 :: [String] -> Coord -> Int
 findSumAdjacentNumbers2 input coord =  
-    let adjacentCoords = filter (withinBounds (length (head input)) (length input)) (neighbors coord)
+    let adjacentCoords = filter (withinBounds (length (head input)) (length input)) (neighbours coord)
         adjacentDigitCoords = [coord | coord <- adjacentCoords, isDigit $ valueAt input coord]
         adjacentValues = nub $ map (\c -> buildConnectedDigits input c) adjacentDigitCoords -- map char of adjacent coords (reading values)
     in if length adjacentValues == 2 then product adjacentValues else 0

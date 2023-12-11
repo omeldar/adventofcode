@@ -1,4 +1,4 @@
-import Data.List (transpose, intercalate, tails, intersect)
+import Data.List (transpose, tails, intersect)
 
 type Coord = (Int, Int)
 type GridElement = (Coord, Int)
@@ -9,7 +9,7 @@ main = do
         galaxyCombinations = combinations (galaxyLocations grid [])
         emptyXandY = getEmptyXandY input
     print $ sum $ map (\comb -> calcScaledDistance comb emptyXandY 2) galaxyCombinations
-    print $ sum $ map (\comb -> calcScaledDistance comb emptyXandY 1000000) galaxyCombinations
+    print $ sum $ map (\comb -> calcScaledDistance comb emptyXandY 1000000) galaxyCombinations  -- both parts in ~3.35 secs
 
 -- calculate scale based on empty line crossings and the normal distance
 calcScaledDistance :: (Coord, Coord) -> ([Int], [Int]) -> Int -> Int

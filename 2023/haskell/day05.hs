@@ -1,5 +1,4 @@
 import Data.List.Split (splitOn, chunksOf)
-import Debug.Trace (trace)
 
 type FromToRange = (Int, Int, Int)
 

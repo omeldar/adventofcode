@@ -6,7 +6,8 @@ import Data.Maybe (fromJust)
 type Coord = (Int, Int)
 type GridElement = (Coord, Char)
 
--- no guarantee it works on every input
+-- no guarantee it works on every input (you'll see why on line 44 and 93, but at this point I was too tired to fix it)
+-- This solution in general is not a really clean one, but as I mentioned in the above comment, I do not want to put in more time in this
 
 main = do
     input <- scale . lines <$> readFile "input.txt"

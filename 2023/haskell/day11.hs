@@ -1,22 +1,34 @@
-import Data.List (transpose, intercalate, tails)
+import Data.List (transpose, intercalate, tails, intersect)
 import Debug.Trace (trace)
 
 type Coord = (Int, Int)
 type GridElement = (Coord, Int)
 
 main = do
-    input <- lines <$> readFile "test.txt"
-    let galaxiesExpanded = expandGalaxy input
-        grid = createGrid galaxiesExpanded
+    input <- lines <$> readFile "input.txt"
+    let grid = createGrid input
+        galaxyCombinations = combinations (galaxyLocations grid [])
+        emptyXandY = getEmptyXandY input
+    print $ sum $ map (\comb -> calcScaledDistance comb emptyXandY 2) galaxyCombinations
+    print $ sum $ map (\comb -> calcScaledDistance comb emptyXandY 1000000) galaxyCombinations
 
-        -- [Coord] of all coordinates where galaxies lie
-        galaxyCoordinates = galaxyLocations grid [] 
+-- PART 2
+calcScaledDistance :: (Coord, Coord) -> ([Int], [Int]) -> Int -> Int
+calcScaledDistance ((x1, y1), (x2, y2)) (xEmpty, yEmpty) rangePerEmpty =  expandedSpaceDistance + normalDistance
+    where
+        normalDistance = calcDistance ((x1, y1), (x2, y2))
+        expandedSpaceDistance = xIntersectRange * (rangePerEmpty - 1) + yIntersectRange * (rangePerEmpty - 1)
+        xIntersectRange = length $ [((min x1 x2)+1)..(max x1 x2)] `intersect` xEmpty
+        yIntersectRange = length $ [((min y1 y2)+1)..(max y1 y2)] `intersect` yEmpty
 
-        -- [(Coord, Coord)] a list of all possible combinations to calculate distance for
-        galaxyCombinations = combinations galaxyCoordinates
+getEmptyXandY :: [[Char]] -> ([Int], [Int])
+getEmptyXandY input = (xIndexs, yIndexs)
+    where
+        yIndexs = emptyRowIndxs input
+        xIndexs = emptyRowIndxs (transpose input)
 
-    --writeFile "out.txt" $ intercalate "\n" $ galaxiesExpanded
-    print $ sum $ map calcDistance galaxyCombinations
+emptyRowIndxs :: [[Char]] -> [Int]
+emptyRowIndxs grid = [index | (line, index) <- zip grid [0..], '#' `notElem` line]
 
 -- PART 1
 -- calculate shortest distance with x distance + y distance
@@ -37,17 +49,3 @@ galaxyLocations (el:grid) coords = galaxyLocations grid newCoords
 -- expand the galaxy rows and columns if no galaxy inside, then parse to grid
 createGrid :: [[Char]] -> [GridElement]
 createGrid chars = [((x,y), if ((chars !! y) !! x) == '#' then 0 else 1) | y <- [0..((length chars) - 1)], x <- [0..((length $ head chars) - 1)]]
-
--- I did not use transpose because transposing and then applying would
-expandGalaxy :: [[Char]] -> [[Char]]
-expandGalaxy input = expandColumns (expandRows input [])
-
-expandRows :: [[Char]] -> [[Char]] -> [[Char]]
-expandRows [] newRows = newRows
-expandRows (row:rows) newRows = expandRows rows addedRows
-    where
-        addedRows = if '#' `elem` row then newRows ++ [row] else newRows ++ [expandedRow] ++ [row]
-        expandedRow = replicate (length row) '.'
-
-expandColumns :: [[Char]] -> [[Char]]
-expandColumns grid = transpose $ expandRows (transpose grid) []

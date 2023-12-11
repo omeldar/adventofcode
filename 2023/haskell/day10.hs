@@ -2,28 +2,29 @@ import qualified Data.Map as M
 import qualified Data.Set as S
 import Data.List (find, intercalate, transpose)
 import Data.Maybe (fromJust)
-import Debug.Trace (trace)
 
 type Coord = (Int, Int)
 type GridElement = (Coord, Char)
 
+-- no guarantee it works on every input
+
 main = do
-    input <- scale . lines <$> readFile "test.txt"
+    input <- scale . lines <$> readFile "input.txt"
     let inputWithOuterOs = addOuterOs input
         grid = createGrid inputWithOuterOs
         xB = length $ head inputWithOuterOs
         yB = length inputWithOuterOs
         pipeMap = M.fromList grid
         startEl = fromJust $ find start grid
+
         coordsAdjToStart = filter (\c -> c `elem` pipeOpenings startEl) $ neighbours $ fst startEl
         pipesAdjToStart = map (\c -> (c, fromJust $ M.lookup c pipeMap)) coordsAdjToStart
         pipesOfLoop = loopPipe pipeMap (head $ pipesAdjToStart) startEl (head $ pipesAdjToStart) S.empty
-        floodedSet = floodFill [(0,0)] (xB, yB) S.empty pipesOfLoop
-        dotCount = allPoints inputWithOuterOs 0
-        floodDotCount = floodedPoints (S.toList floodedSet) pipeMap 0
+        floodedSet = floodFill [(0,0)] ((xB + 1), (yB + 1)) pipesOfLoop
+        inner = filter (\(p,c) -> p `S.notMember` floodedSet) grid
     writeFile "out.txt" $ intercalate "\n" $ inputWithOuterOs -- If you want to output a visualization - upscaled grid of pipes
     print $ (S.size pipesOfLoop) `div` 4
-    print $ dotCount - floodDotCount
+    print $ (`countElements` 0) $ map fst inner
 
 -- PART 1
 loopPipe :: M.Map Coord Char -> GridElement -> GridElement -> GridElement -> S.Set Coord -> S.Set Coord
@@ -40,7 +41,7 @@ nextPipe pipes prevEl currEl = head $ filter (/= prevEl) adjacentPipes
 
 pipeOpenings :: GridElement -> [Coord]
 pipeOpenings ((currX, currY), c)
-    | c == 'S' = [(currX + 1, currY), (currX, currY + 1)] -- only working for inputs where S = F
+    | c == 'S' = [(currX - 1, currY), (currX, currY + 1)] -- only working for inputs where S = 7
     | c == '|' = [(currX, currY - 1), (currX, currY + 1)] -- |
     | c == '-' = [(currX - 1, currY), (currX + 1, currY)] -- -
     | c == 'L' = [(currX + 1, currY), (currX, currY - 1)] -- └
@@ -49,26 +50,25 @@ pipeOpenings ((currX, currY), c)
     | c == 'F' = [(currX + 1, currY), (currX, currY + 1)] -- ┌
 
 -- PART 2
-floodFill :: [Coord] -> Coord -> S.Set Coord -> S.Set Coord -> S.Set Coord
-floodFill [] _ visited pipes = visited
-floodFill (coord:coords) (xB, yB) visited pipes = floodFill (validNeighbours ++ coords) (xB, yB) (S.insert coord visited) pipes
+floodFill :: [Coord] -> Coord -> S.Set Coord -> S.Set Coord
+floodFill [] _ visited = visited
+floodFill (coord:coords) (xB, yB) visited = floodFill (neighboursNotVisited ++ coords) (xB, yB) (S.insert coord visited)
     where
-        validNeighbours = filter (\c -> c `S.notMember` pipes) neighboursNotVisited
         neighboursNotVisited = filter (\c -> c `S.notMember` visited) neighboursByBounds
         neighboursByBounds = filter (\(x,y) -> x < xB && x >= 0 && y < yB && y >= 0) $ neighbours coord
 
-allPoints :: [String] -> Int -> Int 
-allPoints [] dotCount = dotCount
-allPoints (line:lines) dotCount = allPoints lines newDotCount
+countElements :: [Coord] -> Int -> Int
+countElements [] count = count
+countElements ((x, y):ps) count = countElements ps val
     where
-        newDotCount = dotCount + (sum $ map (\c -> ifPoint c) line)
-        ifPoint char = if char == '.' then 1 else 0
+        val = if odd x && odd y then count + 1 else count
 
 floodedPoints :: [Coord] -> M.Map Coord Char -> Int -> Int
 floodedPoints [] _ count = count
 floodedPoints (coord:coords) pipeMap count = floodedPoints coords pipeMap newDotCount
     where
-        newDotCount = if '.' == (fromJust $ M.lookup coord pipeMap) then (count + 1) else count
+        newDotCount = if ('.' == char) then (count + 1) else count
+        char = fromJust $ M.lookup coord pipeMap
 
 addOuterOs :: [String] -> [String]
 addOuterOs input = map (\line -> line ++ "o") input ++ [replicate xLength 'o']
@@ -90,6 +90,7 @@ upReplace c
 leftReplace :: Char -> Char
 leftReplace c
     | c == '-' || c == 'J' || c == '7' = '-'
+    | c == 'S' = '-'
     | otherwise = 'o'
 
 -- PART 1 & 2- HELPER METHODS

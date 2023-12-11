@@ -1,5 +1,4 @@
 import Data.List (transpose, intercalate, tails, intersect)
-import Debug.Trace (trace)
 
 type Coord = (Int, Int)
 type GridElement = (Coord, Int)

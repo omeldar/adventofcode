@@ -1,5 +1,4 @@
 import Data.List (span)
-import Debug.Trace (trace)
 
 main = do
     input <- lines <$> readFile "input.txt"

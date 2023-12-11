@@ -1,6 +1,5 @@
 import Data.Char (isDigit)
 import Data.List (findIndex, isPrefixOf)
-import Debug.Trace (trace)
 
 main = do
     input <- lines <$> readFile "test.txt"

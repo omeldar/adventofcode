@@ -17,8 +17,8 @@ calcScaledDistance ((x1, y1), (x2, y2)) (xEmpty, yEmpty) rangePerEmpty =  expand
     where
         normalDistance = calcDistance ((x1, y1), (x2, y2))
         expandedSpaceDistance = xIntersectRange * (rangePerEmpty - 1) + yIntersectRange * (rangePerEmpty - 1)
-        xIntersectRange = length $ [((min x1 x2)+1)..(max x1 x2)] `intersect` xEmpty
-        yIntersectRange = length $ [((min y1 y2)+1)..(max y1 y2)] `intersect` yEmpty
+        xIntersectRange = length $ [(min x1 x2+1)..(max x1 x2)] `intersect` xEmpty
+        yIntersectRange = length $ [(min y1 y2+1)..(max y1 y2)] `intersect` yEmpty
 
 -- get all indexes for empty lines horizontally and vertically
 getEmptyXandY :: [[Char]] -> ([Int], [Int])
@@ -38,7 +38,7 @@ calcDistance ((x1, y1), (x2, y2)) = abs (x2 - x1) + abs (y2 - y1)
 -- all combinations of galaxies to get shortest distance for (unique elements)
 combinations :: [Coord] -> [(Coord, Coord)]
 combinations xs = [ (x,y) | (x:rest) <- tails xs , y <- rest ]
-        
+
 -- all galaxy coordinates
 galaxyLocations :: [GridElement] -> [Coord] -> [Coord]
 galaxyLocations [] coords = coords
@@ -48,4 +48,4 @@ galaxyLocations (el:grid) coords = galaxyLocations grid newCoords
 
 -- expand the galaxy rows and columns if no galaxy inside, then parse to grid
 createGrid :: [[Char]] -> [GridElement]
-createGrid chars = [((x,y), if ((chars !! y) !! x) == '#' then 0 else 1) | y <- [0..((length chars) - 1)], x <- [0..((length $ head chars) - 1)]]
+createGrid chars = [((x,y), if ((chars !! y) !! x) == '#' then 0 else 1) | y <- [0..(length chars - 1)], x <- [0..(length (head chars) - 1)]]

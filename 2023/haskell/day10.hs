@@ -20,11 +20,11 @@ main = do
 
         coordsAdjToStart = filter (\c -> c `elem` pipeOpenings startEl) $ neighbours $ fst startEl
         pipesAdjToStart = map (\c -> (c, fromJust $ M.lookup c pipeMap)) coordsAdjToStart
-        pipesOfLoop = loopPipe pipeMap (head $ pipesAdjToStart) startEl (head $ pipesAdjToStart) S.empty
-        floodedSet = floodFill [(0,0)] ((xB + 1), (yB + 1)) pipesOfLoop
+        pipesOfLoop = loopPipe pipeMap (head $ pipesAdjToStart) startEl (head pipesAdjToStart) S.empty
+        floodedSet = floodFill [(0,0)] (xB + 1, yB + 1) pipesOfLoop
         inner = filter (\(p,c) -> p `S.notMember` floodedSet) grid
     writeFile "out.txt" $ intercalate "\n" $ inputWithOuterOs -- If you want to output a visualization - upscaled grid of pipes
-    print $ (S.size pipesOfLoop) `div` 4
+    print $ S.size pipesOfLoop `div` 4
     print $ (`countElements` 0) $ map fst inner
 
 -- PART 1
@@ -38,7 +38,7 @@ loopPipe pipes startEl prevEl currEl visited
 nextPipe :: M.Map Coord Char -> GridElement -> GridElement -> GridElement
 nextPipe pipes prevEl currEl = head $ filter (/= prevEl) adjacentPipes
     where
-        adjacentPipes = map (\coord -> ((coord), fromJust $ M.lookup coord pipes)) $ pipeOpenings currEl
+        adjacentPipes = map (\coord -> (coord, fromJust $ M.lookup coord pipes)) $ pipeOpenings currEl
 
 pipeOpenings :: GridElement -> [Coord]
 pipeOpenings ((currX, currY), c)
@@ -55,7 +55,7 @@ floodFill :: [Coord] -> Coord -> S.Set Coord -> S.Set Coord
 floodFill [] _ visited = visited
 floodFill (coord:coords) (xB, yB) visited = floodFill (neighboursNotVisited ++ coords) (xB, yB) (S.insert coord visited)
     where
-        neighboursNotVisited = filter (\c -> c `S.notMember` visited) neighboursByBounds
+        neighboursNotVisited = filter (`S.notMember` visited) neighboursByBounds
         neighboursByBounds = filter (\(x,y) -> x < xB && x >= 0 && y < yB && y >= 0) $ neighbours coord
 
 countElements :: [Coord] -> Int -> Int
@@ -68,18 +68,18 @@ floodedPoints :: [Coord] -> M.Map Coord Char -> Int -> Int
 floodedPoints [] _ count = count
 floodedPoints (coord:coords) pipeMap count = floodedPoints coords pipeMap newDotCount
     where
-        newDotCount = if ('.' == char) then (count + 1) else count
+        newDotCount = if '.' == char then count + 1 else count
         char = fromJust $ M.lookup coord pipeMap
 
 addOuterOs :: [String] -> [String]
-addOuterOs input = map (\line -> line ++ "o") input ++ [replicate xLength 'o']
+addOuterOs input = map (++ "o") input ++ [replicate xLength 'o']
     where
-        xLength = 1 + (length $ head input)
+        xLength = 1 + length (head input)
 
 -- PART 2 HELPER METHODS
 scale :: [String] -> [String]
 scale = transpose . map (addBefore upReplace) . transpose . map (addBefore leftReplace)
-    where 
+    where
         addBefore :: (Char -> Char) -> [Char] -> [Char]
         addBefore f = concatMap (\c -> [f c, c])
 
@@ -105,5 +105,5 @@ start ((_,_), 'S') = True
 start _ = False
 
 -- PARSING
-createGrid :: [[Char]] -> [GridElement] 
+createGrid :: [[Char]] -> [GridElement]
 createGrid chars = [((x, y), c) | (y, row) <- zip [0..] chars, (x, c) <- zip [0..] row]

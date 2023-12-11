@@ -9,7 +9,7 @@ main = do
     let instructions = head input
         networkMap = toMap (drop 2 input)
     print $ indexFirstZ (cycle instructions) 0 networkMap "AAA"
-    print $ foldl1 lcm $ map (\n -> indexFirstZ (cycle instructions) 0 networkMap n) (filter ((== 'A') . last) (M.keys networkMap))
+    print $ foldl1 lcm $ map (indexFirstZ (cycle instructions) 0 networkMap) (filter ((== 'A') . last) (M.keys networkMap))
 
 indexFirstZ :: String -> Int -> M.Map String NetwMap -> String -> Int
 indexFirstZ _ steps _ [_, _, 'Z'] = steps
@@ -24,7 +24,7 @@ toMap input = M.fromList $ zip (keys input []) (values input [])
 
 keys :: [String] -> [String] -> [String]
 keys [] keyValues = reverse keyValues -- prepending and reversing is faster than appending to list
-keys (line:input) keyValues = keys input $ (head $ words line):keyValues
+keys (line:input) keyValues = keys input $ head (words line):keyValues
 
 values :: [String] -> [NetwMap] -> [NetwMap]
 values [] netwMap = reverse netwMap

@@ -12,10 +12,10 @@ main = do
 totalWins :: [String] -> Bool -> Int
 totalWins inp hasJokers = sum $ zipWith (*) (map (\(_, bid, _) -> bid) sortedHands) [1..]
     where
-        sortedHands = (sortByTypeAndCardVal (map (`toHandType` hasJokers) inp))
+        sortedHands = sortByTypeAndCardVal (map (`toHandType` hasJokers) inp)
 
 evalHandType :: [Int] -> Int
-evalHandType hand = case sort $ map (\(_, s) -> s) $ frequency hand of
+evalHandType hand = case sort $ map snd $ frequency hand of
     [5] -> 6   -- five of a kind
     [1, 4] -> 5  -- four of a kind
     [2, 3] -> 4    -- full house
@@ -27,7 +27,7 @@ evalHandType hand = case sort $ map (\(_, s) -> s) $ frequency hand of
 evalJokerHandType :: [Int] -> Int
 evalJokerHandType [1,1,1,1,1] = 6
 evalJokerHandType hand = evalHandType $ replaceJokerWithMostCommon
-    where 
+    where
         replaceJokerWithMostCommon = map (\n -> if n == 1 then mostCommonNum else n) hand
         mostCommonNum = fst $ last sortedByFreq
         sortedByFreq = sortBy (\(c1, f1) (c2, f2) -> compare f1 f2) $ frequency $ filter (/= 1) hand
@@ -36,7 +36,7 @@ frequency :: (Ord a) => [a] -> [(a, Int)]
 frequency xs = toList (fromListWith (+) [(x, 1) | x <- xs])
 
 sortByTypeAndCardVal :: [Hand] -> [Hand]
-sortByTypeAndCardVal hands  = sortBy compareHighestCard hands
+sortByTypeAndCardVal = sortBy compareHighestCard
 
 compareHighestCard :: Hand -> Hand -> Ordering
 compareHighestCard (h1, _, t1) (h2, _, t2)

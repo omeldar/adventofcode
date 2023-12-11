@@ -31,14 +31,14 @@ getToBounds op coord inpLength
 buildConnectedDigits :: [String] -> Coord -> Int
 buildConnectedDigits input coord = read (reverse leftDigits ++ [valueAt input coord] ++ rightDigits)
     where
-        leftDigits = takeWhile isDigit $ reverse $ map (\c -> valueAt input c) (getToBounds 'L' coord (length (head input)))
-        rightDigits = takeWhile isDigit $ map (\c -> valueAt input c) (getToBounds 'R' coord (length (head input)))
+        leftDigits = takeWhile isDigit $ reverse $ map (valueAt input) (getToBounds 'L' coord (length (head input)))
+        rightDigits = takeWhile isDigit $ map (valueAt input) (getToBounds 'R' coord (length (head input)))
 
 findSumAdjacentNumbers :: [String] -> Coord -> Int
-findSumAdjacentNumbers input coord =  
+findSumAdjacentNumbers input coord =
     let adjacentCoords = filter (withinBounds (length (head input)) (length input)) (neighbours coord)
         adjacentDigitCoords = [coord | coord <- adjacentCoords, isDigit $ valueAt input coord]
-        adjacentValues = map (\c -> buildConnectedDigits input c) adjacentDigitCoords -- map char of adjacent coords (reading values)
+        adjacentValues = map (buildConnectedDigits input) adjacentDigitCoords -- map char of adjacent coords (reading values)
     in sum $ nub adjacentValues
 
 -- processes the grid and returns all the coordinates of the symbols, then collects all the numbers adjacent to symbols
@@ -55,10 +55,10 @@ isSymbol2 :: Char -> Bool
 isSymbol2 c = c == '*'
 
 findSumAdjacentNumbers2 :: [String] -> Coord -> Int
-findSumAdjacentNumbers2 input coord =  
+findSumAdjacentNumbers2 input coord =
     let adjacentCoords = filter (withinBounds (length (head input)) (length input)) (neighbours coord)
         adjacentDigitCoords = [coord | coord <- adjacentCoords, isDigit $ valueAt input coord]
-        adjacentValues = nub $ map (\c -> buildConnectedDigits input c) adjacentDigitCoords -- map char of adjacent coords (reading values)
+        adjacentValues = nub $ map (buildConnectedDigits input) adjacentDigitCoords -- map char of adjacent coords (reading values)
     in if length adjacentValues == 2 then product adjacentValues else 0
 
 -- processes the grid and returns all the coordinates of the symbols, then collects all the numbers adjacent to symbols

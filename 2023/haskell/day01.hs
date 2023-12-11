@@ -3,11 +3,11 @@ import Data.List (findIndex, isPrefixOf)
 
 main = do
     input <- lines <$> readFile "test.txt"
-    print $ sum $ map (\l -> getNumber l) input
+    print $ sum $ map getNumber input
 
 -- PART 1
 getNumber :: String -> Int
-getNumber calStr = read ([head digits, last digits])
+getNumber calStr = read [head digits, last digits]
     where
         digits = [c | c <- calStr, isDigit c]
 

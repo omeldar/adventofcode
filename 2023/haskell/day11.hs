@@ -11,7 +11,7 @@ main = do
     print $ sum $ map (\comb -> calcScaledDistance comb emptyXandY 2) galaxyCombinations
     print $ sum $ map (\comb -> calcScaledDistance comb emptyXandY 1000000) galaxyCombinations
 
--- PART 2
+-- calculate scale based on empty line crossings and the normal distance
 calcScaledDistance :: (Coord, Coord) -> ([Int], [Int]) -> Int -> Int
 calcScaledDistance ((x1, y1), (x2, y2)) (xEmpty, yEmpty) rangePerEmpty =  expandedSpaceDistance + normalDistance
     where
@@ -20,16 +20,17 @@ calcScaledDistance ((x1, y1), (x2, y2)) (xEmpty, yEmpty) rangePerEmpty =  expand
         xIntersectRange = length $ [((min x1 x2)+1)..(max x1 x2)] `intersect` xEmpty
         yIntersectRange = length $ [((min y1 y2)+1)..(max y1 y2)] `intersect` yEmpty
 
+-- get all indexes for empty lines horizontally and vertically
 getEmptyXandY :: [[Char]] -> ([Int], [Int])
 getEmptyXandY input = (xIndexs, yIndexs)
     where
         yIndexs = emptyRowIndxs input
         xIndexs = emptyRowIndxs (transpose input)
 
+-- get indexes of empty lines (no '#')
 emptyRowIndxs :: [[Char]] -> [Int]
 emptyRowIndxs grid = [index | (line, index) <- zip grid [0..], '#' `notElem` line]
 
--- PART 1
 -- calculate shortest distance with x distance + y distance
 calcDistance :: (Coord, Coord) -> Int
 calcDistance ((x1, y1), (x2, y2)) = abs (x2 - x1) + abs (y2 - y1)

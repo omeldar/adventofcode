@@ -1,4 +1,5 @@
 import Data.List.Split (splitOn)
+import Data.List (intercalate)
 import Debug.Trace (trace)
 import qualified Data.Map.Strict as M
 
@@ -11,9 +12,19 @@ main = do
     input <- lines <$> readFile "input.txt"
     let records = map parse input
     print $ part1 records
+    print $ part2 records
 
 part1 :: [Record] -> Int
 part1 records = loopRecords records (M.empty :: DPMap) 0
+
+part2 :: [Record] -> Int
+part2 records = loopRecords (toP2records records []) (M.empty :: DPMap) 0
+
+toP2records :: [Record] -> [Record] -> [Record]
+toP2records [] newRecords = newRecords
+toP2records (record:records) newRecords = toP2records records $ newRecords ++ [x5record]
+    where
+        x5record = (intercalate "?" (replicate 5 $ fst record), take (5 * length (snd record)) $ cycle $ snd record)
 
 loopRecords :: [Record] -> DPMap -> Int -> Int
 loopRecords [] _ permCount = permCount

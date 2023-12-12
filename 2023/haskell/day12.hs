@@ -30,16 +30,18 @@ f dpMap condStr blocks si bi current
 calcNewPerm :: DPMap -> String -> [Int] -> Int -> Int -> Int -> (DPMap, Int)
 calcNewPerm dpMap condStr blocks si bi current = (M.insert key perms dpMap, perms)
     where
-        key = (si, bi, current)
+        key = trace (show dpMap) (si, bi, current)
         perms = foldl (\permAcc c ->
             if condStr !! si == c || condStr !! si == '?'
-                then (if (c == '.' && current == 0) || (c == '.' && current > 0 && bi < length blocks && blocks !! bi == current)
-                    then permAcc + snd (f dpMap condStr blocks (si + 1) (bi + 1) 0)
-                    else (if c == '#'
-                        then permAcc + snd (f dpMap condStr blocks (si + 1) bi (current + 1))
-                        else permAcc))
-                    else permAcc
-                ) 0 ".#"
+                then if c == '.' && current == 0
+                    then permAcc + snd (f dpMap condStr blocks (si + 1) bi 0)
+                    else if c == '.' && current > 0 && bi < length blocks && blocks !! bi == current
+                        then permAcc + snd (f dpMap condStr blocks (si + 1) (bi + 1) 0)
+                        else if c == '#'
+                            then permAcc + snd (f dpMap condStr blocks (si + 1) bi (current + 1))
+                            else permAcc
+                else permAcc
+            ) 0 ".#"
 
 parse :: String -> Record
 parse input = (str, numbers)

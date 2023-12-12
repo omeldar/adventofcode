@@ -6,7 +6,7 @@ type Record = (String, [Int])
 type DPMap = M.Map (Int, Int, Int) Int
 
 main = do
-    input <- lines <$> readFile "test.txt"
+    input <- lines <$> readFile "input.txt"
     let records = map parse input
     print $ part2 records
 
@@ -15,7 +15,7 @@ part2 records = loopRecords records (M.empty :: DPMap) 0
 
 loopRecords :: [Record] -> DPMap -> Int -> Int
 loopRecords [] _ permCount = permCount
-loopRecords (record:records) dpMap permCount = loopRecords records newMap newPermCount
+loopRecords (record:records) dpMap permCount = loopRecords records newMap (permCount + newPermCount)
     where
         (newMap, newPermCount) = uncurry (f dpMap) record 0 0 0
 
@@ -29,7 +29,7 @@ f dpMap condStr blocks si bi current
 calcNewPerm :: DPMap -> String -> [Int] -> Int -> Int -> Int -> (DPMap, Int)
 calcNewPerm dpMap condStr blocks si bi current = (M.insert key perms dpMap, perms)
     where
-        key = trace (show dpMap) (si, bi, current)
+        key = (si, bi, current)
         perms = foldl (\permAcc c ->
             if condStr !! si == c || condStr !! si == '?'
                 then if c == '.' && current == 0

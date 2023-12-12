@@ -174,3 +174,93 @@ GGG = (GGG, GGG)            22C = (22Z, 22Z)
 ZZZ = (ZZZ, ZZZ)            22Z = (22B, 22B)
                             XXX = (XXX, XXX)
 ```
+
+## Day 09
+
+Here we needed to find the next value in a row of values. For example in `0,2,4,6,8` what is the next number? The solution here would be obviously `10`. So we have some rows of these.
+
+Part 1: Find the next number in a row
+
+Part 2: Find the previous number in a row
+
+We can achieve this by recursively getting the difference on each level and applying it back to the upper level in the recursion. For part 2, we just reverse the input.
+
+```
+0   3   6   9  12  15  18
+  3   3   3   3   3   3
+    0   0   0   0   0
+```
+
+## Day 10
+
+On day 10, we needed to find a loop of pipes in a grid of pipes. We knew where the loop started. 
+
+Part 1: We needed to find out, which is the furthest point from the start in the loop.
+
+Part 2: Now we need to calculate all the values encapsulated in the pipe-loop. But theres a catch: Squeezing in-between pipes works as well:
+
+```
+..........
+.S------7.
+.|F----7|.
+.||OOOO||.
+.||OOOO||.
+.|L-7F-J|.
+.|II||II|.
+.L--JL--J.
+..........
+```
+
+As you see here, the `I`s are encapsulated in the loop. But squeezing in between the pipes from below (`J` & `L`) the `O`s are not encapsulated. 
+To get a result, we expanded the grid by 2x. That way there always is a point between the pipes and we can use a **flood-fill algorithm** to flood all the locations from the outside to the inside. That way we can calculate how many of the points were encapsulated inside the loop.
+
+## Day 11
+
+On day 11 we had to find the shortest distance between galaxies. But we can only travel straight in the coordinate system (up or down). Travelling tthrough galaxies is possible as well, so theres no need of any shortest path algorithm, we only need to find the cartesian product of those two galaxies in the grid.
+
+The catch here: Space expands. Since space expands at the location where there are no galaxies, we need to calculate the distance going through rows and columns with no galaxies differently. 
+
+Part 1: For part 1, we need to count each empty row or column twice in the distance.
+
+Part 2: Now every empty column or row adds a distance of 1000000
+
+```
+...#......
+.......#..
+#.........
+..........
+......#...
+.#........
+.........#
+..........
+.......#..
+#...#.....
+```
+
+## Day 12
+
+In day 12, we need to find all possible combinations that match a certain pattern. We can only use `#` and `.` a to replace the `?` in the strings to count the combinations in. The `#` represent functioning springs, the `.` represent not functioning springs. There is a pattern next to the string like :`3,5,8` meaning, there are first 3 working springs in a group, then 5 in a group, then 8. But there are always multiple possibilities for combinations to achieve this pattern when replacing the `?` characters in the string.
+
+Part 1: Find the sum of all possible combinations for all the strings
+
+Part 2: Find the sum of all possible combinations for all the strnigs, but the strings repeat 5 times and have a `?` as binding character in between.
+
+```
+???.### 1,1,3 
+.??..??...?##. 1,1,3 
+?#?#?#?#?#?#?#? 1,3,1,6 
+????.#...#... 4,1,1 
+????.######..#####. 1,6,5 
+?###???????? 3,2,1 
+```
+
+- 1 arrangement
+- 4 arrangements
+- 1 arrangement
+- 1 arrangement
+- 4 arrangements
+- 10 arrangements
+
+So a total of 21 arrangement possibilities.
+
+_And if you're wondering: No, you can't solve this by pure brute-force. Only for the test-input string in part 2 you'll have something about 36 quadrillion combinations, 500'000 of them are valid ones. And you'll have to do this for 1000 input strings. If it takes you 1 millisecond to calculate one combination, it would take you 864 million years in order to compute that._

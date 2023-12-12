@@ -8,17 +8,16 @@ type DPMap = M.Map (Int, Int, Int) Int
 main = do
     input <- lines <$> readFile "test.txt"
     let records = map parse input
-    print $ part1 records
+    print $ part2 records
 
-part1 :: [Record] -> Int
-part1 records = loopRecords records (M.empty :: DPMap) 0
+part2 :: [Record] -> Int
+part2 records = loopRecords records (M.empty :: DPMap) 0
 
 loopRecords :: [Record] -> DPMap -> Int -> Int
 loopRecords [] _ permCount = permCount
 loopRecords (record:records) dpMap permCount = loopRecords records newMap newPermCount
     where
         (newMap, newPermCount) = uncurry (f dpMap) record 0 0 0
-
 
 f :: DPMap -> String -> [Int] -> Int -> Int -> Int -> (DPMap, Int)
 f dpMap condStr blocks si bi current

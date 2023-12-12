@@ -8,7 +8,7 @@ type DPMap = M.Map (Int, Int, Int) Int
 -- DOES NOT WORK YET
 
 main = do
-    input <- lines <$> readFile "test.txt"
+    input <- lines <$> readFile "input.txt"
     let records = map parse input
     print $ part1 records
 
@@ -17,9 +17,9 @@ part1 records = loopRecords records (M.empty :: DPMap) 0
 
 loopRecords :: [Record] -> DPMap -> Int -> Int
 loopRecords [] _ permCount = permCount
-loopRecords (record:records) dpMap permCount = loopRecords records newMap (permCount + newPermCount)
+loopRecords (record:records) dpMap permCount = loopRecords records (M.empty :: DPMap) (permCount + newPermCount)
     where
-        (newMap, newPermCount) = uncurry (f dpMap) record 0 0 0
+        (_, newPermCount) = uncurry (f dpMap) record 0 0 0
 
 f :: DPMap -> String -> [Int] -> Int -> Int -> Int -> (DPMap, Int)
 f dpMap condStr blocks si bi current

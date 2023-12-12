@@ -1,25 +1,45 @@
 import Data.List.Split (splitOn)
-import Data.List (group)
+import Debug.Trace (trace)
+import qualified Data.Map.Strict as M
 
 type Record = (String, [Int])
-type SplitRecord = ([String], [Int])
-
--- ???.### 1,1,3 - 1 arrangement
--- .??..??...?##. 1,1,3 - 4 arrangements
--- ?#?#?#?#?#?#?#? 1,3,1,6 - 1 arrangement
--- ????.#...#... 4,1,1 - 1 arrangement
--- ????.######..#####. 1,6,5 - 4 arrangements
--- ?###???????? 3,2,1 - 10 arrangements
+type DPMap = M.Map (Int, Int, Int) Int
 
 main = do
     input <- lines <$> readFile "test.txt"
     let records = map parse input
-    print $ map splitByWorking records
+    print $ part1 records
 
-splitByWorking :: Record -> SplitRecord
-splitByWorking record = (splitted, snd record)
+part1 :: [Record] -> Int
+part1 records = loopRecords records (M.empty :: DPMap) 0
+
+loopRecords :: [Record] -> DPMap -> Int -> Int
+loopRecords [] _ permCount = permCount
+loopRecords (record:records) dpMap permCount = loopRecords records newMap newPermCount
     where
-        splitted = filter ((/= '.') . head) $ group $ fst record
+        (newMap, newPermCount) = uncurry (f dpMap) record 0 0 0
+
+
+f :: DPMap -> String -> [Int] -> Int -> Int -> Int -> (DPMap, Int)
+f dpMap condStr blocks si bi current
+    | M.member (si, bi, current) dpMap = (dpMap, dpMap M.! (si, bi, current))
+    | si == length condStr =
+        if (bi == length blocks && current == 0) || (bi == length blocks - 1 && blocks !! bi == current) then (dpMap,1) else (dpMap,0)
+    | otherwise = calcNewPerm dpMap condStr blocks si bi current
+
+calcNewPerm :: DPMap -> String -> [Int] -> Int -> Int -> Int -> (DPMap, Int)
+calcNewPerm dpMap condStr blocks si bi current = (M.insert key perms dpMap, perms)
+    where
+        key = (si, bi, current)
+        perms = foldl (\permAcc c ->
+            if condStr !! si == c || condStr !! si == '?'
+                then (if (c == '.' && current == 0) || (c == '.' && current > 0 && bi < length blocks && blocks !! bi == current)
+                    then permAcc + snd (f dpMap condStr blocks (si + 1) (bi + 1) 0)
+                    else (if c == '#'
+                        then permAcc + snd (f dpMap condStr blocks (si + 1) bi (current + 1))
+                        else permAcc))
+                    else permAcc
+                ) 0 ".#"
 
 parse :: String -> Record
 parse input = (str, numbers)

@@ -1,13 +1,9 @@
 import Data.List.Split (splitOn)
 import Data.List (intercalate)
-import Debug.Trace (trace)
 import qualified Data.Map.Strict as M
 
 type Record = (String, [Int])
 type DPMap = M.Map (Int, Int, Int) Int
-
--- IS REALLY REALLY SLOW, IT TOOK A WHOLE DAY TO COMPUTE
--- Might optimize this at some point
 
 main = do
     input <- lines <$> readFile "input.txt"
@@ -38,23 +34,18 @@ f dpMap condStr blocks si bi current
     | M.member (si, bi, current) dpMap = (dpMap, dpMap M.! (si, bi, current))
     | si == length condStr =
         if (bi == length blocks && current == 0) || (bi == length blocks - 1 && blocks !! bi == current) then (dpMap,1) else (dpMap,0)
-    | otherwise = calcNewPerm dpMap condStr blocks si bi current
-
-calcNewPerm :: DPMap -> String -> [Int] -> Int -> Int -> Int -> (DPMap, Int)
-calcNewPerm dpMap condStr blocks si bi current = (M.insert key perms dpMap, perms)
+    | otherwise = (M.insert (si, bi, current) (permDot + permRoute) routeMap, permDot + permRoute)
     where
-        key = (si, bi, current)
-        perms = foldl (\permAcc c ->
-            if condStr !! si == c || condStr !! si == '?'
-                then if c == '.' && current == 0
-                    then permAcc + snd (f dpMap condStr blocks (si + 1) bi 0)
-                    else if c == '.' && current > 0 && bi < length blocks && blocks !! bi == current
-                        then permAcc + snd (f dpMap condStr blocks (si + 1) (bi + 1) 0)
-                        else if c == '#'
-                            then permAcc + snd (f dpMap condStr blocks (si + 1) bi (current + 1))
-                            else permAcc
-                else permAcc
-            ) 0 ".#"
+        (dotMap, permDot) = getPerm dpMap condStr blocks si bi current '.'
+        (routeMap, permRoute) = getPerm dotMap condStr blocks si bi current '#'
+
+getPerm :: DPMap -> String -> [Int] -> Int -> Int -> Int -> Char -> (DPMap, Int)
+getPerm dpMap condStr blocks si bi current c
+    | condStr !! si /= c && condStr !! si /= '?' = (dpMap, 0)
+    | c == '.' && current == 0 = f dpMap condStr blocks (si + 1) bi 0
+    | c == '.' && current > 0 && bi < length blocks && blocks !! bi == current = f dpMap condStr blocks (si + 1) (bi + 1) 0
+    | c == '#' = f dpMap condStr blocks (si + 1) bi (current + 1)
+    | otherwise = (dpMap, 0)
 
 parse :: String -> Record
 parse input = (str, numbers)

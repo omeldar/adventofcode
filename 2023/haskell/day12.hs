@@ -5,17 +5,14 @@ import qualified Data.Map.Strict as M
 type Record = (String, [Int])
 type DPMap = M.Map (Int, Int, Int) Int
 
+-- ~ 16 seconds (interpreted)
+-- ~ 2 seconds (compiled)
+
 main = do
     input <- lines <$> readFile "input.txt"
     let records = map parse input
-    print $ part1 records
-    print $ part2 records
-
-part1 :: [Record] -> Int
-part1 records = loopRecords records (M.empty :: DPMap) 0
-
-part2 :: [Record] -> Int
-part2 records = loopRecords (toP2records records []) (M.empty :: DPMap) 0
+    print $ loopRecords records (M.empty :: DPMap) 0
+    print $ loopRecords (toP2records records []) (M.empty :: DPMap) 0
 
 toP2records :: [Record] -> [Record] -> [Record]
 toP2records [] newRecords = newRecords

@@ -16,13 +16,13 @@ totalWins inp hasJokers = sum $ zipWith (*) (map (\(_, bid, _) -> bid) sortedHan
 
 evalHandType :: [Int] -> Int
 evalHandType hand = case sort $ map snd $ frequency hand of
-    [5] -> 6   -- five of a kind
-    [1, 4] -> 5  -- four of a kind
-    [2, 3] -> 4    -- full house
-    [1, 1, 3] -> 3 -- three of a kind
-    [1, 2, 2] -> 2 -- two pair
-    [1, 1, 1, 2] -> 1  -- one pair
-    _ -> 0    -- nothing
+    [5]          -> 6   -- five of a kind
+    [1, 4]       -> 5   -- four of a kind
+    [2, 3]       -> 4   -- full house
+    [1, 1, 3]    -> 3   -- three of a kind
+    [1, 2, 2]    -> 2   -- two pair
+    [1, 1, 1, 2] -> 1   -- one pair
+    _            -> 0   -- nothing
 
 evalJokerHandType :: [Int] -> Int
 evalJokerHandType [1,1,1,1,1] = 6
@@ -47,12 +47,12 @@ compareHighestCard (h1, _, t1) (h2, _, t2)
 -- PARSING
 cardTypeValue :: Char -> Bool -> Int
 cardTypeValue c b = case (c, b) of
-    ('A',_) -> 14
-    ('K',_) -> 13
-    ('Q',_) -> 12
+    ('A',_)     -> 14
+    ('K',_)     -> 13
+    ('Q',_)     -> 12
     ('J',False) -> 11
-    ('J',True) -> 1
-    ('T',_) -> 10
+    ('J',True)  -> 1
+    ('T',_)     -> 10
 
 toHandType :: String -> Bool -> Hand
 toHandType handString hasJokers = (cards, read $ last $ words handString, handTypeFunc cards)

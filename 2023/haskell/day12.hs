@@ -6,7 +6,8 @@ import qualified Data.Map.Strict as M
 type Record = (String, [Int])
 type DPMap = M.Map (Int, Int, Int) Int
 
--- DOES NOT WORK YET
+-- IS REALLY REALLY SLOW, IT TOOK A WHOLE DAY TO COMPUTE
+-- Might optimize this at some point
 
 main = do
     input <- lines <$> readFile "input.txt"

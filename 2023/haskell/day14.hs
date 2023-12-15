@@ -16,7 +16,7 @@ calcNorthLoad grid = load (tilt grid 0)
 load :: [[Char]] -> Int
 load = sum . zipWith (*) [1..] . map (length . filter (== 'O')) . reverse
 
--- calculate load on north beams after 1B iterations complete by finding a cycle (Part 2)
+-- calculate load on north beams after 1B iterations by using a cycle (Part 2)
 calcForIter :: [[Char]] -> Int
 calcForIter grid = load completedIterations
     where
@@ -24,7 +24,7 @@ calcForIter grid = load completedIterations
         cyclesNeeded = start + mod (1_000_000_000 - start) cycleL
         completedIterations = iterate fullRotation grid !! cyclesNeeded
 
--- detects cycles by keeping track of visited configurations
+-- looks for cycles by checking visited configurations
 detectCycle :: [[Char]] -> Int -> M.Map [[Char]] Int -> (Int, Int)
 detectCycle grid count visited = case M.lookup grid visited of
     Just start  -> (start, count - start)
@@ -34,7 +34,7 @@ detectCycle grid count visited = case M.lookup grid visited of
 fullRotation :: [[Char]] -> [[Char]]
 fullRotation grid = foldl tilt grid [0..3]
 
--- applying dir-ward shifts in grid
+-- applying dir-ward shifts in grid, depending on tilt direction
 tilt :: [[Char]] -> Int -> [[Char]]
 tilt grid dir
     | dir == 0 || dir == 2 = transpose $ map f $ transpose grid -- (0 = up, 2 = left)

@@ -1,58 +1,57 @@
 import Data.List.Split (splitOn)
-import Data.List (findIndex)
 import Data.Char (ord)
-import Data.Maybe
+import Data.Maybe (fromJust)
+import qualified Data.IntMap as IM
 
-type Lens = (String, Int)
+type Lens = (String, Maybe Int)
 
--- if - ,remove the lens in the box with the given label
--- if = and already in the box, replace the focus of the existing lens
--- if = and not in the box, add to end of the box
-
--- PART 2 not completed yet, some of it is just some pseudocode so I dont forget what I was trying
+amtBoxes = 256
 
 main = do
-    input <- splitOn "," <$> readFile "input.txt"
-    print $ sum $ map (\str -> hash str) input
+    input <- splitOn "," <$> readFile "test.txt"
+    print $ sum $ map hash input
 
 hash :: String -> Int
-hash = foldl (\acc c -> ((acc + (ord c)) * 17) `mod` 256) 0
+hash = foldl (\acc c -> ((acc + ord c) * 17) `mod` 256) 0
 
-boxes :: [[Lens]]
-boxes = replicate 256 []
+sortHandler :: [String] -> IM.IntMap [Lens] -> IM.IntMap [Lens]
+sortHandler (lens:lenses) boxes = case parseLens lens of
+    (label, Just focus) -> 
+        sortHandler lenses newBoxes 
+        where
+            newBoxes = addOrUpdate (label, Just focus) boxes
+    (label, Nothing) -> 
+        sortHandler lenses newBoxes 
+        where
+            newBoxes = remove label boxes
 
-sortLenses :: [String] -> [[Lens]] -> Int
-sortLenses [] boxes = focusPower boxes
-sortLenses (str:strs) boxes = sortLenses strs (newBoxes str boxes)
+remove :: String -> IM.IntMap [Lens] -> IM.IntMap [Lens]
+remove lens boxes = IM.empty
 
-newBoxes :: String -> [[Lens]] -> [[Lens]]
-newBoxes lensStr boxes
-    | focus == Nothing = removeLens label idx boxes                         -- removeLens needs to return new list of all boxes
-    | isNothing indexInBox = addLens (label, focus) idx boxes     -- addLens needs to return new list of all boxes
-    | otherwise = overwriteFocus (label, focus) (fromJust indexInBox) idx boxes          -- overwriteFocus needs to return new list of all boxes
-    where
-        (label, focus) = lensParse lensStr
-        idx = hash label
-        indexInBox = lensIndex (label, focus) (boxes !! idx)
+addOrUpdate :: Lens -> IM.IntMap [Lens] -> IM.IntMap [Lens]
+addOrUpdate lens@(label,focus) boxes
+    | inBox = IM.adjust (update lensesInBox lens) key boxes
+    | otherwise = IM.adjust (append lensesInBox lens) key boxes     -- compiler error, not sure why yet
+    where 
+        inBox = lens `elem` lensesInBox
+        lensesInBox = fromJust $ IM.lookup key boxes
+        key = hash label
 
-removeLens :: String -> Int -> [[Lens]] -> [[Lens]]
-removeLens _ _ boxes = boxes
+update :: [Lens] -> Lens -> [Lens] -> [Lens]
+update [] _ newLenses = newLenses
+update (old:lenses) new newLenses
+    | fst old == fst new = update lenses new newLenses ++ [new]
+    | otherwise = update lenses new newLenses ++ [old]
 
-addLens :: Lens -> Int -> [[Lens]] -> [[Lens]]
-addLens _ _ boxes = boxes
+append :: [Lens] -> Lens -> [Lens]
+append lenses new = lenses ++ [new]
 
-overwriteFocus :: Lens -> Int -> Int -> [[Lens]] -> [[Lens]]
-overwriteFocus _ _ _ boxes = boxes
+-- HELPERS
+createBoxes :: IM.IntMap [Lens]
+createBoxes = IM.fromList $ map (, []) [1..amtBoxes]
 
-lensIndex :: String -> [Lens] -> Int
-lensIndex (sLabel, _) box = findIndex (\(label, value) -> label == sLabel) box
-
-lensParse :: String -> (String, Maybe Int)
-lensParse lens
-    | '-' `elem` lens = (init lens, Nothing)
-    | '=' `elem` lens = (label, read focus)
-    where
-        (label, focus) = splitOn "=" lens
-
-focusPower :: [[Lens]] -> Int
-focusPower boxes = 0
+parseLens :: String -> Lens
+parseLens str
+    | '-' `elem` str = (init str, Nothing)
+    | '=' `elem` str = (label, Just (read focus))
+    where [label, focus] = splitOn "=" str

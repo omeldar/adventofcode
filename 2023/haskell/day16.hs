@@ -13,7 +13,7 @@ main = do
     input <- lines <$> readFile "test.txt"
     let grid = gridMap input M.empty 0
         (xBounds, yBounds) = (length $ head input, length input)
-    print $ traverseGrid grid (0,0) RIGHT M.empty (xBounds, yBounds)
+    print $ length $ traverseGrid grid (0,0) RIGHT M.empty (xBounds, yBounds)
 
 traverseGrid :: Grid -> (Int, Int) -> Direction -> Energized -> (Int,Int) -> Energized
 traverseGrid _ _ END energized _ = energized
@@ -23,7 +23,9 @@ traverseGrid grid currPos@(x,y) direction energized (xB, yB)
     | otherwise = M.unionsWith combineDirections $ map (\((nx, ny), nDir) -> traverseGrid grid (nx, ny) nDir newEnergized (xB, yB)) nextSteps
     where
         nextSteps = move currPos (fromJust $ M.lookup currPos grid) direction
-        newEnergized = M.insert currPos (energizedDirections ++ [direction]) energized
+        newEnergized
+            | isDirInEnergized = M.insert currPos energizedDirections energized
+            | otherwise = M.insert currPos (energizedDirections ++ [direction]) energized
         energizedDirections = fromMaybe [] (M.lookup currPos energized)
         combineDirections ds1 ds2 = ds1 ++ ds2
         isDirInEnergized = case M.lookup currPos energized of
@@ -31,21 +33,17 @@ traverseGrid grid currPos@(x,y) direction energized (xB, yB)
             Nothing -> False
 
 move :: (Int, Int) -> Char -> Direction -> [((Int, Int), Direction)]
-move (x,y) c dir = map (getNextPos (x, y) dir,) $ getNextDir c dir
+move (x,y) c dir = trace (show (x,y) ++ " " ++ show c ++ " " ++ show dir) map (getNextPos (x, y) dir,) $ getNextDir c dir
 
 getNextPos :: (Int, Int) -> Direction -> (Int, Int)
 getNextPos (x,y) dir = case dir of
     UP -> (x, y - 1)
     DOWN -> (x, y + 1)
-    LEFT -> (x - 1, y - 1)
-    RIGHT -> (x + 1, y - 1)
+    LEFT -> (x - 1, y)
+    RIGHT -> (x + 1, y)
 
 getNextDir :: Char -> Direction -> [Direction]
 getNextDir c dir = case (c, dir) of
-    ('.', LEFT) -> [LEFT]
-    ('.', RIGHT) -> [RIGHT]
-    ('.', UP) -> [UP]
-    ('.', DOWN) -> [DOWN]
     ('/', LEFT) -> [UP]
     ('/', RIGHT) -> [DOWN]
     ('/', UP) -> [LEFT]
@@ -54,15 +52,15 @@ getNextDir c dir = case (c, dir) of
     ('\\', RIGHT) -> [UP]
     ('\\', UP) -> [RIGHT]
     ('\\', DOWN) -> [LEFT]
-    ('-', LEFT) -> [RIGHT]
-    ('-', RIGHT) -> [LEFT]
+    ('-', LEFT) -> [LEFT]
+    ('-', RIGHT) -> [RIGHT]
     ('-', UP) -> [LEFT, RIGHT]
     ('-', DOWN) -> [LEFT, RIGHT]
     ('|', LEFT) -> [UP, DOWN]
     ('|', RIGHT) -> [UP, DOWN]
-    ('|', UP) -> [DOWN]
-    ('|', DOWN) -> [UP]
-
+    ('|', UP) -> [UP]
+    ('|', DOWN) -> [DOWN]
+    ('.', _) -> [dir]
 -- PARSE
 gridMap :: [[Char]] -> Grid -> Int -> Grid
 gridMap [] grid _ = grid

@@ -19,7 +19,7 @@ traverseGrid :: Grid -> (Int, Int) -> Direction -> Energized -> (Int,Int) -> Ene
 traverseGrid _ _ END energized _ = energized
 traverseGrid grid currPos@(x,y) direction energized (xB, yB)
     | isDirInEnergized = energized
-    | x >= xB - 1 || y >= yB - 1 = energized
+    | x >= xB - 1 || y >= yB - 1 || x < 0 || y < 0 = energized
     | otherwise = M.unionsWith combineDirections $ map (\((nx, ny), nDir) -> traverseGrid grid (nx, ny) nDir newEnergized (xB, yB)) nextSteps
     where
         nextSteps = move currPos (fromJust $ M.lookup currPos grid) direction
@@ -42,10 +42,10 @@ getNextPos (x,y) dir = case dir of
 
 getNextDir :: Char -> Direction -> [Direction]
 getNextDir c dir = case (c, dir) of
-    ('.', LEFT) -> [RIGHT]
-    ('.', RIGHT) -> [LEFT]
-    ('.', UP) -> [DOWN]
-    ('.', DOWN) -> [UP]
+    ('.', LEFT) -> [LEFT]
+    ('.', RIGHT) -> [RIGHT]
+    ('.', UP) -> [UP]
+    ('.', DOWN) -> [DOWN]
     ('/', LEFT) -> [UP]
     ('/', RIGHT) -> [DOWN]
     ('/', UP) -> [LEFT]

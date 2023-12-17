@@ -1,5 +1,6 @@
 import qualified Data.Map as M
 import Data.Maybe (fromJust, fromMaybe)
+import Debug.Trace (trace)
 
 type Grid = M.Map (Int, Int) Char
 type Energized = M.Map (Int, Int) [Direction]
@@ -18,7 +19,7 @@ traverseGrid :: Grid -> (Int, Int) -> Direction -> Energized -> (Int,Int) -> Ene
 traverseGrid _ _ END energized _ = energized
 traverseGrid grid currPos@(x,y) direction energized (xB, yB)
     | isDirInEnergized = energized
-    | xB - 1 >= x || yB - 1 >= y = energized
+    | x >= xB - 1 || y >= yB - 1 = energized
     | otherwise = M.unionsWith combineDirections $ map (\((nx, ny), nDir) -> traverseGrid grid (nx, ny) nDir newEnergized (xB, yB)) nextSteps
     where
         nextSteps = move currPos (fromJust $ M.lookup currPos grid) direction

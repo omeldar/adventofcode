@@ -1,67 +1,57 @@
-import qualified Data.Map as M
 import Data.Maybe (fromJust, fromMaybe)
+import Data.List (nub)
 import Debug.Trace (trace)
+import qualified Data.Map as M
 
 type Grid = M.Map (Int, Int) Char
 type Energized = M.Map (Int, Int) [Direction]
 
 data Direction = LEFT | RIGHT | UP | DOWN | END deriving (Show, Eq, Enum)
 
--- DOES NOT WORK, RETURNS EMPTY LIST
-
 main = do
-    input <- lines <$> readFile "test.txt"
+    input <- lines <$> readFile "input.txt"
     let grid = gridMap input M.empty 0
         (xBounds, yBounds) = (length $ head input, length input)
-    print $ length $ traverseGrid grid (0,0) RIGHT M.empty (xBounds, yBounds)
+    print $ length $ traverseGrid grid (0,0) LEFT M.empty (xBounds, yBounds)
 
 traverseGrid :: Grid -> (Int, Int) -> Direction -> Energized -> (Int,Int) -> Energized
 traverseGrid _ _ END energized _ = energized
 traverseGrid grid currPos@(x,y) direction energized (xB, yB)
-    | isDirInEnergized = energized
-    | x >= xB - 1 || y >= yB - 1 || x < 0 || y < 0 = energized
+    | isStateInEnergized = energized
+    | x >= xB || y >= yB || x < 0 || y < 0 = energized
     | otherwise = M.unionsWith combineDirections $ map (\((nx, ny), nDir) -> traverseGrid grid (nx, ny) nDir newEnergized (xB, yB)) nextSteps
     where
         nextSteps = move currPos (fromJust $ M.lookup currPos grid) direction
-        newEnergized
-            | isDirInEnergized = M.insert currPos energizedDirections energized
-            | otherwise = M.insert currPos (energizedDirections ++ [direction]) energized
+        newEnergized = M.insert currPos (energizedDirections ++ [direction]) energized
         energizedDirections = fromMaybe [] (M.lookup currPos energized)
-        combineDirections ds1 ds2 = ds1 ++ ds2
-        isDirInEnergized = case M.lookup currPos energized of
+        combineDirections ds1 ds2 = nub (ds1 ++ ds2)
+        isStateInEnergized = case M.lookup currPos energized of
             Just directions -> direction `elem` directions
             Nothing -> False
 
 move :: (Int, Int) -> Char -> Direction -> [((Int, Int), Direction)]
-move (x,y) c dir = trace (show (x,y) ++ " " ++ show c ++ " " ++ show dir) map (getNextPos (x, y) dir,) $ getNextDir c dir
+move (x,y) c dir = case (c, dir) of
+    ('.', LEFT) -> [((x + 1, y),LEFT)]
+    ('.', RIGHT) -> [((x - 1, y),RIGHT)]
+    ('.', UP) -> [((x, y + 1),UP)]
+    ('.', DOWN) -> [((x, y - 1),DOWN)]
+    ('/', LEFT) -> [((x, y - 1),DOWN)]
+    ('/', RIGHT) -> [((x, y + 1),UP)]
+    ('/', UP) -> [((x - 1, y),RIGHT)]
+    ('/', DOWN) -> [((x + 1, y),LEFT)]
+    ('\\', LEFT) -> [((x, y + 1),UP)]
+    ('\\', RIGHT) -> [((x, y - 1),DOWN)]
+    ('\\', UP) -> [((x + 1, y),LEFT)]
+    ('\\', DOWN) -> [((x - 1, y),RIGHT)]
+    ('-', LEFT) -> [((x + 1, y),LEFT)]
+    ('-', RIGHT) -> [((x - 1, y),RIGHT)]
+    ('-', UP) -> [((x - 1, y),RIGHT),((x + 1, y),LEFT)]
+    ('-', DOWN) -> [((x - 1, y),RIGHT),((x + 1, y),LEFT)]
+    ('|', LEFT) -> [((x, y + 1),UP),((x, y - 1),DOWN)]
+    ('|', RIGHT) -> [((x, y + 1),UP),((x, y - 1),DOWN)]
+    ('|', UP) -> [((x, y + 1),UP)]
+    ('|', DOWN) -> [((x, y -1),DOWN)]
 
-getNextPos :: (Int, Int) -> Direction -> (Int, Int)
-getNextPos (x,y) dir = case dir of
-    UP -> (x, y - 1)
-    DOWN -> (x, y + 1)
-    LEFT -> (x - 1, y)
-    RIGHT -> (x + 1, y)
-
-getNextDir :: Char -> Direction -> [Direction]
-getNextDir c dir = case (c, dir) of
-    ('/', LEFT) -> [UP]
-    ('/', RIGHT) -> [DOWN]
-    ('/', UP) -> [LEFT]
-    ('/', DOWN) -> [RIGHT]
-    ('\\', LEFT) -> [DOWN]
-    ('\\', RIGHT) -> [UP]
-    ('\\', UP) -> [RIGHT]
-    ('\\', DOWN) -> [LEFT]
-    ('-', LEFT) -> [LEFT]
-    ('-', RIGHT) -> [RIGHT]
-    ('-', UP) -> [LEFT, RIGHT]
-    ('-', DOWN) -> [LEFT, RIGHT]
-    ('|', LEFT) -> [UP, DOWN]
-    ('|', RIGHT) -> [UP, DOWN]
-    ('|', UP) -> [UP]
-    ('|', DOWN) -> [DOWN]
-    ('.', _) -> [dir]
--- PARSE
 gridMap :: [[Char]] -> Grid -> Int -> Grid
 gridMap [] grid _ = grid
 gridMap (line:lines) grid y = gridMap lines newGrid (y + 1)

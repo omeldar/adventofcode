@@ -38,4 +38,4 @@ The structure is simple:
 
 - `./src`: In here you can find the source files and solutions to the puzzles.
 - `./zig-out/bin`: Here you'll find the executables after building with `zig build`.
-- `input.txt`: This file temporarily stores the Advent of Code puzzle input. My puzzle inputs are not added to version control to respect the creator's request for participants not to share them.
+- `input.txt`: It temporarily stores the Advent of Code puzzle input. My puzzle inputs are **not added** to version control to respect the creator's request for participants not to share them.

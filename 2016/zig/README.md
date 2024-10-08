@@ -16,7 +16,7 @@ You can use `run.sh` to run single days solutions. You can do this by first buil
 ./run.sh <day>
 ```
 
-For example for day01.zig, use: `,/run.sh day01`.
+For example for day01.zig, use: `./run.sh day01`.
 
 This will directly run the compiled executable in `zig-out/bin/`.
 
@@ -27,8 +27,10 @@ You can use `zig run` to compile the specified Zig source file into an executabl
 So from the root (of the zig project), you can use:
 
 ```
-zig run src/day01.zig
+zig run src/<day>.zig
 ```
+
+For example for day01.zig, use: `zig run src/day01.zig`.
 
 ## Structure
 

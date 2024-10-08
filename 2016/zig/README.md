@@ -6,7 +6,7 @@ Yes, thats my only argument.
 
 ## How to run it
 
-There are several ways to run the single days / challenges:
+There are several ways to run the single days / challanges:
 
 ### Run by using the `run.sh`
 

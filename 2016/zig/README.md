@@ -24,6 +24,12 @@ This will directly run the compiled executable in `zig-out/bin/`.
 
 You can use `zig run` to compile the specified Zig source file into an executable. It executes the resulting binary. These build artifacts are not retained permanently, so they are **Temporary Build Artifacts**.
 
+So from the root (of the zig project), you can use:
+
+```
+zig run src/day01.zig
+```
+
 ## Structure
 
 The structure is simple:

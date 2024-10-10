@@ -1,4 +1,5 @@
 const std = @import("std");
+const math = std.math;
 
 const Direction = enum { North, East, South, West };
 
@@ -66,7 +67,7 @@ pub fn main() !void {
             return;
         };
 
-        var turn: u8 = 0;  // Mutable variable to store turn value
+        var turn: u8 = 0; // Mutable variable to store turn value
         switch (direction) {
             'R' => turn = 1,
             'L' => turn = 0,
@@ -74,11 +75,15 @@ pub fn main() !void {
                 std.debug.print("Invalid direction {}\n", .{direction});
                 continue;
             },
-        };
+        }
 
         position.updatePosition(turn, distance);
     }
 
     std.debug.print("Final Position: ({}, {})\n", .{ position.x, position.y });
-    std.debug.print("You are {} blocks away from the target", .{position.x + position.y});
+
+    const absx = try std.math.absInt(position.x);
+    const absy = try std.math.absInt(position.y);
+
+    std.debug.print("You are {} blocks away from the target", .{absx + absy});
 }

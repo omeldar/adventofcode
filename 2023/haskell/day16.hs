@@ -1,5 +1,5 @@
 import Data.Maybe (fromJust, fromMaybe)
-import Data.List (nub)
+import Data.List (nub, sortOn)
 import Debug.Trace (trace)
 import qualified Data.Map as M
 
@@ -13,7 +13,9 @@ main = do
     input <- lines <$> readFile "input.txt"
     let grid = gridMap input M.empty 0
         (xBounds, yBounds) = (length $ head input, length input)
+        allBoundaryCoords = generateBoundaryCoords (0, 0) (xBounds, yBounds)
     print $ length $ traverseGrid grid (0,0) LEFT M.empty (xBounds, yBounds)
+    print $ maximum $ map (\(coords, dir) -> M.size $ traverseGrid grid coords dir M.empty (xBounds, yBounds)) allBoundaryCoords
 
 traverseGrid :: Grid -> (Int, Int) -> Direction -> Energized -> (Int,Int) -> Energized
 traverseGrid _ _ END energized _ = energized
@@ -29,6 +31,14 @@ traverseGrid grid currPos@(x,y) direction energized (xB, yB)
         isStateInEnergized = case M.lookup currPos energized of
             Just directions -> direction `elem` directions
             Nothing -> False
+
+generateBoundaryCoords :: Coord -> Coord -> [(Coord, Direction)]
+generateBoundaryCoords (minx, miny) (maxx, maxy) = left ++ top ++ right ++ bottom
+    where
+        left = map ((,LEFT) . (0,)) [0..maxy]   -- generate (0, [0..maxy]) and then combines to make ((0, [0..maxy]), LEFT)
+        top = map ((,UP) . (,0)) [0..maxx]
+        right = map ((,RIGHT) . (maxx,)) [0..maxy]
+        bottom = map ((,DOWN) . (,maxy)) [0..maxx]
 
 move :: Coord -> Char -> Direction -> [(Coord, Direction)]
 move (x,y) c dir = case (c, dir) of

@@ -3,6 +3,7 @@ import Data.List (nub)
 import Debug.Trace (trace)
 import qualified Data.Map as M
 
+type Coord = (Int, Int)
 type Grid = M.Map (Int, Int) Char
 type Energized = M.Map (Int, Int) [Direction]
 
@@ -19,7 +20,7 @@ traverseGrid _ _ END energized _ = energized
 traverseGrid grid currPos@(x,y) direction energized (xB, yB)
     | isStateInEnergized = energized
     | x >= xB || y >= yB || x < 0 || y < 0 = energized
-    | otherwise = M.unionsWith combineDirections $ map (\((nx, ny), nDir) -> traverseGrid grid (nx, ny) nDir newEnergized (xB, yB)) nextSteps
+    | otherwise = foldl (\energ (currCord, currDir) -> traverseGrid grid currCord currDir energ (xB, yB)) newEnergized nextSteps
     where
         nextSteps = move currPos (fromJust $ M.lookup currPos grid) direction
         newEnergized = M.insert currPos (energizedDirections ++ [direction]) energized
@@ -29,7 +30,7 @@ traverseGrid grid currPos@(x,y) direction energized (xB, yB)
             Just directions -> direction `elem` directions
             Nothing -> False
 
-move :: (Int, Int) -> Char -> Direction -> [((Int, Int), Direction)]
+move :: Coord -> Char -> Direction -> [(Coord, Direction)]
 move (x,y) c dir = case (c, dir) of
     ('.', LEFT) -> [((x + 1, y),LEFT)]
     ('.', RIGHT) -> [((x - 1, y),RIGHT)]

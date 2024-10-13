@@ -1,6 +1,5 @@
 import Data.Maybe (fromJust, fromMaybe)
 import Data.List (nub, sortOn)
-import Debug.Trace (trace)
 import qualified Data.Map as M
 
 type Coord = (Int, Int)

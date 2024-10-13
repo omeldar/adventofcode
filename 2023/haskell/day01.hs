@@ -1,6 +1,6 @@
 import Data.Char (isDigit)
-import Data.List (findIndex, isPrefixOf)
 
+main :: IO ()
 main = do
     input <- lines <$> readFile "test.txt"
     print $ sum $ map getNumber input
@@ -12,4 +12,5 @@ getNumber calStr = read [head digits, last digits]
         digits = [c | c <- calStr, isDigit c]
 
 -- PART 2
+numbers :: [String]
 numbers = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"]

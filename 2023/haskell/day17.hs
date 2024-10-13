@@ -1,14 +1,19 @@
-import Data.List
 import Debug.Trace ( trace )
 import qualified Data.Map as M
 
 type Coord = (Int, Int)
-type Grid = M.Map (Int, Int) Int
+type Grid = M.Map (Coord) Int
+type Dijkgrid = M.Map (Coord) (Int, Direction, Int)   -- (x,y) ()
+
+data Direction = North | West | South | East deriving (Show, Eq, Enum)
 
 main = do
     input <- lines <$> readFile "test.txt"
     let grid = gridMap input M.empty 0
-    print $ show grid
+    print ""
+
+dijk :: Grid -> 
+dijk = 
 
 gridMap :: [[Char]] -> Grid -> Int -> Grid
 gridMap [] grid _ = grid

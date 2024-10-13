@@ -1,23 +1,19 @@
 import Debug.Trace ( trace )
-import qualified Data.Map as M
+import Data.Array.Unboxed
 
 type Coord = (Int, Int)
-type Grid = M.Map (Coord) Int
-type Dijkgrid = M.Map (Coord) (Int, Direction, Int)   -- (x,y) ()
+type Grid = UArray Coord Int
 
 data Direction = North | West | South | East deriving (Show, Eq, Enum)
 
 main = do
     input <- lines <$> readFile "test.txt"
-    let grid = gridMap input M.empty 0
-    print ""
+    let grid = gridMap input (length input) (length (head input))
+    print $ show grid
 
-dijk :: Grid -> 
-dijk = 
 
-gridMap :: [[Char]] -> Grid -> Int -> Grid
-gridMap [] grid _ = grid
-gridMap (line:lines) grid y = gridMap lines newGrid (y + 1)
+gridMap :: [[Char]] -> Int -> Int -> Grid
+gridMap input numRows numCols = array bounds hlValues
     where
-        updateGrid g (x, char) = M.insert (x, y) (read [char] :: Int) g
-        newGrid = foldl updateGrid grid $ zip [0..] line
+        bounds = ((0,0), (numRows - 1, numCols - 1))
+        hlValues = [((x, y), read [char] :: Int) | (y, line) <- zip [0..] input, (x, char) <- zip [0..] line]

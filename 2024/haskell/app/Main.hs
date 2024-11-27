@@ -1,5 +1,4 @@
 module Main where
-
 import DayTest as DT
 
 main :: IO ()

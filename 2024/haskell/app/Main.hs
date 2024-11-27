@@ -1,5 +1,5 @@
 module Main where
-import DayTest as DT
+import DayTest as DT ( run )
 
 main :: IO ()
 main = do

@@ -1,4 +1,4 @@
-# Advent of Code Haskell Project
+# Advent of Code - Haskell Setup
 
 This project is a setup for solving Advent of Code puzzles using Haskell. The structure makes it easy to add new puzzle implementations, run them with minimal effort, and keep everything organized in a modular way.
 

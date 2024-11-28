@@ -23,7 +23,7 @@ project-root/
 - **`app/Main.hs`**: This is the entry point for the project. It handles command-line arguments and runs the corresponding puzzle solution based on the input.
 - **`lib/DayTest.hs`**: Contains the implementation of a specific puzzle solution, for example, a simple function to test (`run`). Each puzzle day can be added in this folder as a new module.
 - **`test/DayTestTest.hs`**: Contains the tests for the puzzle implementations, ensuring correctness.
-- **`input.txt`**: A shared input file for all the puzzles. This allows you to use a consistent input file across multiple days without providing it manually every time.
+- **`input.txt`**: A shared input file for all the puzzles. This file will not be pushed to version control.
 - **`aoc2024.cabal`**: The Cabal configuration file that defines the project, including dependencies and executable settings.
 
 ## How to Run the Project

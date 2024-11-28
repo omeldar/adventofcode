@@ -3,8 +3,12 @@ module DayTest (
     addTest
 ) where
 
-run :: Integer -> Integer -> IO()
-run x y = print $ addTest x y
+-- This is an example for a day's puzzle implementation
+run :: String -> IO()
+run filePath = do
+    contents <- readFile filePath
+    putStrLn contents
 
+-- This is an example for the test suite
 addTest :: Integer -> Integer -> Integer
 addTest x y = x + y

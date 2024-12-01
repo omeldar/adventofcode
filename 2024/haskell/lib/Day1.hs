@@ -6,8 +6,8 @@ run :: String -> IO()
 run filePath = do
     contents <- readFile filePath
     let (left, right) = parse contents
-    print $ show $ part1 (left, right)
-    print $ show $ part2 (left, right)
+    print $ part1 (left, right)
+    print $ part2 (left, right)
 
 part1 :: ([Int], [Int]) -> Int
 part1 (left, right) = sum $ zipWith (\x y -> abs (x - y)) left right

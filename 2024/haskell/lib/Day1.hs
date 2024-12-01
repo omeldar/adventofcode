@@ -1,4 +1,4 @@
-module Day1 (run) where
+module Day1 (run, part1, part2, parse) where
 
 import Data.List (sort, nub)
 
@@ -13,7 +13,7 @@ part1 :: ([Int], [Int]) -> Int
 part1 (left, right) = sum $ zipWith (\x y -> abs (x - y)) left right
 
 part2 :: ([Int], [Int]) -> Int
-part2 (left, right) = sum $ map (\x -> x * countOccs x right) $ nub left
+part2 (left, right) = sum $ map (\x -> x * countOccs x right) left
 
 countOccs :: Eq a => a -> [a] -> Int
 countOccs x = length . filter (== x)

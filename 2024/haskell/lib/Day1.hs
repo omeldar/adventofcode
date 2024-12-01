@@ -1,6 +1,7 @@
 module Day1 (run, part1, part2, parse) where
 
-import Data.List (sort, nub)
+import Data.List ( sort, nub )
+import Common ( countOccs )
 
 run :: String -> IO()
 run filePath = do
@@ -14,9 +15,6 @@ part1 (left, right) = sum $ zipWith (\x y -> abs (x - y)) left right
 
 part2 :: ([Int], [Int]) -> Int
 part2 (left, right) = sum $ map (\x -> x * countOccs x right) left
-
-countOccs :: Eq a => a -> [a] -> Int
-countOccs x = length . filter (== x)
 
 parse :: String -> ([Int], [Int])
 parse inp = let (left, right) = unzip $ map ((\[a, b] -> (read a, read b)) . words) (lines inp)

@@ -6,20 +6,12 @@ run :: String -> IO()
 run filePath = do
     contents <- readFile filePath
     let (left, right) = parse contents
-    print $ show $ calcDistance (sort left, sort right) 0
-    print $ show $ calcSimilarity (sort $ nub left, sort right) 0
+    print $ show $ sum $ zipWith (\x y -> abs (x - y)) left right
+    print $ show $ sum $ map (\x -> x * countOccs x right) $ nub left
 
-calcDistance :: ([Int], [Int]) -> Int -> Int
-calcDistance ([], []) dist = dist
-calcDistance (left:ls, right:rs) dist = calcDistance (ls, rs) $ dist + abs (left - right)
-
-calcSimilarity :: ([Int], [Int]) -> Int -> Int
-calcSimilarity ([], _) sim = sim
-calcSimilarity (left:ls, right) sim = calcSimilarity (ls, right) newSim
-    where newSim = sim + left * countOccurences left right
-
-countOccurences :: Eq a => a -> [a] -> Int
-countOccurences x = length . filter (== x)
+countOccs :: Eq a => a -> [a] -> Int
+countOccs x = length . filter (== x)
 
 parse :: String -> ([Int], [Int])
-parse inp = unzip $ map ((\[a, b] -> (read a, read b)) . words ) (lines inp)
+parse inp = let (left, right) = unzip $ map ((\[a, b] -> (read a, read b)) . words) (lines inp)
+            in (sort left, sort right)

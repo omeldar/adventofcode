@@ -19,7 +19,7 @@ common warnings
 
 library
     import:           warnings
-    exposed-modules:  DayTest
+    exposed-modules:  DayTest, Day1
     build-depends:    base ^>=4.17.2.1
     hs-source-dirs:   lib
     default-language: Haskell2010

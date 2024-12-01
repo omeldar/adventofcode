@@ -2,6 +2,7 @@ module Main where
 
 import System.Environment (getArgs)
 import qualified DayTest as DT (run)
+import qualified Day1 as D1 (run)
 
 inputPath :: String
 inputPath = "input.txt"
@@ -18,6 +19,9 @@ runDay :: String -> IO ()
 -- cabal run day test
 runDay "test" = do
     runWithInput DT.run
+
+runDay "1" = do
+    runWithInput D1.run
 
 -- catch the rest
 runDay day = putStrLn $ "Unknown day: " ++ day

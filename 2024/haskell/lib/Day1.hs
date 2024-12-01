@@ -6,8 +6,14 @@ run :: String -> IO()
 run filePath = do
     contents <- readFile filePath
     let (left, right) = parse contents
-    print $ show $ sum $ zipWith (\x y -> abs (x - y)) left right
-    print $ show $ sum $ map (\x -> x * countOccs x right) $ nub left
+    print $ show $ part1 (left, right)
+    print $ show $ part2 (left, right)
+
+part1 :: ([Int], [Int]) -> Int
+part1 (left, right) = sum $ zipWith (\x y -> abs (x - y)) left right
+
+part2 :: ([Int], [Int]) -> Int
+part2 (left, right) = sum $ map (\x -> x * countOccs x right) $ nub left
 
 countOccs :: Eq a => a -> [a] -> Int
 countOccs x = length . filter (== x)

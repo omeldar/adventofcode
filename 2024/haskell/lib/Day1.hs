@@ -1,6 +1,6 @@
 module Day1 (run, part1, part2, parse) where
 
-import Data.List ( sort, nub )
+import Data.List ( sort )
 import Common ( countOccs )
 
 run :: String -> IO()

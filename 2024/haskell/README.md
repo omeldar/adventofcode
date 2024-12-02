@@ -7,6 +7,7 @@ You can run my solutions with `cabal run day [day nr]` (for example: `cabal run 
 Here you'll find a summary of my solved puzzles during the 2024 event.
 
 - [Day 1](./lib/Day1.hs)
+- [Day 2](./lib/Day2.hs)
 
 ## Setup
 

@@ -1,9 +1,8 @@
-module Day3 (run) where
+module Day3 (run, part1, part2) where
 
 import Text.Regex.PCRE ((=~))
 import Data.List.Split (splitOn)
 
-expression :: String
 expression = "mul\\(([0-9]{1,3}),([0-9]{1,3})\\)"
 
 run :: String -> IO ()
@@ -13,13 +12,13 @@ run filePath = do
     print $ part2 content
 
 part1 :: String -> Int
-part1 content = sum $ map (\[_, x, y] -> read x * read y) $ content =~ expression
+part1 content = sum $ map (multiply) $ content =~ expression
 
 part2 :: String -> Int
-part2 content = sum $ map (\[_, x, y] -> read x * read y) $ (onlyDo's content) =~ expression
+part2 content = sum $ map (multiply) $ (onlyDo's content) =~ expression
+
+multiply :: [String] -> Int
+multiply [_, x, y] = read x * read y
 
 onlyDo's :: String -> String
-onlyDo's str = 
-    let newInp = "do()" ++ str
-        parts = splitOn "don't()" newInp
-    in concatMap (concat . drop 1 . splitOn "do()") parts
+onlyDo's = concatMap (concat . drop 1 . splitOn "do()") . splitOn "don't()" . ("do()" ++)

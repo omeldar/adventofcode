@@ -1,6 +1,5 @@
 module DayTestTest where
 
-import Control.Exception
 import Test.HUnit
 import qualified DayTest (addTest)
 

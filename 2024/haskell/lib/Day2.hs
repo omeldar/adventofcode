@@ -1,6 +1,4 @@
-module Day2 (run) where
-
-import Data.List ( words )
+module Day2 (run, part1, part2) where
 
 run :: String -> IO()
 run filePath = do

@@ -4,6 +4,7 @@ import System.Environment (getArgs)
 import qualified DayTest as DT (run)
 import qualified Day1 as D1 (run)
 import qualified Day2 as D2 (run)
+import qualified Day3 as D3 (run)
 
 inputPath :: String
 inputPath = "input.txt"
@@ -26,6 +27,9 @@ runDay "1" = do
 
 runDay "2" = do
     runWithInput D2.run
+
+runDay "3" = do
+    runWithInput D3.run
 
 -- catch the rest
 runDay day = putStrLn $ "Unknown day: " ++ day

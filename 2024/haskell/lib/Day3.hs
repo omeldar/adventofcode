@@ -1,7 +1,7 @@
 module Day3 (run) where
 
 import Text.Regex.PCRE ((=~))
-import Data.List (unfoldr)
+import Data.List.Split (splitOn)
 
 expression :: String
 expression = "mul\\(([0-9]{1,3}),([0-9]{1,3})\\)"
@@ -12,13 +12,19 @@ run filePath = do
     let allMuls = content =~ expression :: [[String]]
         segments = splitSegments content
     print $ sum $ map (\[_, x, y] -> read x * read y) allMuls -- part 1
-    print $ segments -- still working on part 2
+    print segments
+    print $ sum $ map sumSegment segments
+
+sumSegment :: String -> Int
+sumSegment segment =
+    let allMuls = segment =~ expression :: [[String]]
+    in sum $ map (\[_, x, y] -> read x * read y) allMuls
 
 splitSegments :: String -> [String]
-splitSegments str = initialSegment : map (!! 0) (str =~ regex)
+splitSegments str = splitOnDelimiters str : filter (startsWithDo) (map (!! 0) (str =~ regex))
   where
     regex = "(do\\(\\)|don't\\(\\)).*?(?=(do\\(\\)|don't\\(\\))|$)"
-    initialSegment = takeWhile (`notElem` "do()") str
+    startsWithDo segment = take 4 segment == "do()"
 
---splitOnDelimiters :: String -> String
---splitOnDelimiters input = head $ splitOneOf ["do()", "don't()"] input
+splitOnDelimiters :: String -> String
+splitOnDelimiters input = head $ splitOn "don't()" $ head $ splitOn "do()" input

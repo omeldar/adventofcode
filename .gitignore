@@ -2,7 +2,3 @@
 *.exe
 *.hi
 *.o
-
-!2024/haskell/docs/day3/all segments.txt
-!2024/haskell/docs/day3/do segments.txt
-!2024/haskell/docs/day3/original.txt

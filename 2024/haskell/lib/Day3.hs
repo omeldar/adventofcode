@@ -12,10 +12,10 @@ run filePath = do
     print $ part2 content
 
 part1 :: String -> Int
-part1 content = sum $ map (multiply) $ content =~ expression
+part1 content = sum $ map multiply $ content =~ expression
 
 part2 :: String -> Int
-part2 content = sum $ map (multiply) $ (onlyDo's content) =~ expression
+part2 content = sum $ map multiply $ onlyDo's content =~ expression
 
 multiply :: [String] -> Int
 multiply [_, x, y] = read x * read y

@@ -6,6 +6,7 @@ import qualified Day1 as D1 (run)
 import qualified Day2 as D2 (run)
 import qualified Day3 as D3 (run)
 import qualified Day4 as D4 (run)
+import qualified Day5 as D5 (run)
 
 inputPath :: String
 inputPath = "input.txt"
@@ -34,6 +35,9 @@ runDay "3" = do
 
 runDay "4" = do
     runWithInput D4.run
+
+runDay "5" = do
+    runWithInput D5.run
 
 -- catch the rest
 runDay day = putStrLn $ "Unknown day: " ++ day

@@ -6,6 +6,8 @@ This repository is home to my solutions for the [Advent of Code](https://advento
 
 - [2024 (Current event)](./2024/haskell/README.md)
 
+Earlier events I uploaded solutions to:
+
 - [2015](./2015/README.md)
 - [2016](./2016/zig/README.md)
 - [2022](./2022/rust/)

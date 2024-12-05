@@ -1,4 +1,4 @@
-module Day4 (run) where
+module Day4 (run, part1, part2, parse) where
 
 import qualified Data.Array.Unboxed as UA
 import Data.Ix (range, inRange)
@@ -9,10 +9,16 @@ type Position = (Int, Int)
 
 run :: String -> IO ()
 run filePath = do
-    content <- lines <$> readFile filePath
-    let grid = UA.listArray ((0,0), (length content - 1, length (head content) - 1)) $ concat content
-    print $ sum $ map snd $ findAllXmas grid
-    print $ findMasXShape grid
+    content <- readFile filePath
+    let grid = parse content
+    print $ part1 grid
+    print $ part2 grid
+
+part1 :: Grid -> Int
+part1 grid = sum $ map snd $ findAllXmas grid
+
+part2 :: Grid -> Int
+part2 = findMasXShape
 
 directions :: [(Int, Int)]
 directions = [(0, 1), (0, -1), (1, 0), (-1, 0), (1, 1), (-1, -1), (1, -1), (-1, 1)]
@@ -48,3 +54,6 @@ findMasXShape grid =
                all (inBounds ((minX, minY), (maxX, maxY))) diagonal2 &&
                checkPattern validPatterns
     in length [pos | pos <- allPositions, isMasXShape pos]
+
+parse :: String -> Grid
+parse content = UA.listArray ((0,0), (length content - 1, length (head $ lines content) - 1)) $ concat $ lines content

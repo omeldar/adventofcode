@@ -1,8 +1,7 @@
-module Day5 (run) where
+module Day5 (run, part1, part2, parse) where
 
 import Data.List.Split (splitOn)
-import Data.Maybe (fromMaybe)
-import Data.List (elemIndex, sortBy)
+import Data.List (sortBy)
 import Common (getMiddle)
 import qualified Data.Map as Map
 
@@ -10,7 +9,7 @@ type RuleMap = Map.Map Int [Int]
 
 run :: String -> IO ()
 run filePath = do
-    (ruleMap, updates) <- parseInput <$> readFile filePath
+    (ruleMap, updates) <- parse <$> readFile filePath
     print $ part1 ruleMap updates
     print $ part2 ruleMap updates
 
@@ -27,8 +26,8 @@ dynamicSort :: RuleMap -> [Int] -> [Int]
 dynamicSort rules = sortBy (customCompare rules)
 
 -- parsing
-parseInput :: String -> (RuleMap, [[Int]])
-parseInput input = let [rulesS, updatesS] = map lines (splitOn "\n\n" input) in (parseRules rulesS, map (map read . splitOn ",") updatesS)
+parse :: String -> (RuleMap, [[Int]])
+parse input = let [rulesS, updatesS] = map lines (splitOn "\n\n" input) in (parseRules rulesS, map (map read . splitOn ",") updatesS)
 
 parseRules :: [String] -> RuleMap
 parseRules = foldr (\rule m -> let [key, value] = map read (splitOn "|" rule) in Map.insertWith (++) key [value] m) Map.empty

@@ -21,14 +21,14 @@ part2 :: RuleMap -> [[Int]] -> Int
 part2 ruleMap updates = sum $ map (getMiddle . dynamicSort ruleMap) (filter (\row -> row /= reverse (dynamicSort ruleMap row)) updates)
 
 customCompare :: RuleMap -> Int -> Int -> Ordering
-customCompare rules x y = if x `elem` (Map.findWithDefault [] y rules) then LT else GT
+customCompare rules x y = if x `elem` Map.findWithDefault [] y rules then LT else GT
 
 dynamicSort :: RuleMap -> [Int] -> [Int]
 dynamicSort rules = sortBy (customCompare rules)
 
 -- parsing
 parseInput :: String -> (RuleMap, [[Int]])
-parseInput = \input -> let [rulesS, updatesS] = map lines (splitOn "\n\n" input) in (parseRules rulesS, map (map read . splitOn ",") updatesS)
+parseInput input = let [rulesS, updatesS] = map lines (splitOn "\n\n" input) in (parseRules rulesS, map (map read . splitOn ",") updatesS)
 
 parseRules :: [String] -> RuleMap
-parseRules rulesList = foldr (\rule m -> let [key, value] = map read (splitOn "|" rule) in Map.insertWith (++) key [value] m) Map.empty rulesList
+parseRules = foldr (\rule m -> let [key, value] = map read (splitOn "|" rule) in Map.insertWith (++) key [value] m) Map.empty

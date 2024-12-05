@@ -18,7 +18,7 @@ directions :: [(Int, Int)]
 directions = [(0, 1), (0, -1), (1, 0), (-1, 0), (1, 1), (-1, -1), (1, -1), (-1, 1)]
 
 inBounds :: (Position, Position) -> Position -> Bool
-inBounds bounds pos = inRange bounds pos
+inBounds = inRange
 
 findXmasFrom :: Grid -> (Position, Position) -> Position -> (Int, Int) -> Bool
 findXmasFrom grid bounds (x, y) (dx, dy) =

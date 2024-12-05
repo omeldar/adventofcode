@@ -18,17 +18,10 @@ run filePath = do
     print $ sum $ map (getMiddle . dynamicSort ruleMap) (filter (not . isValidRow ruleMap) updates)
 
 isValidRow :: RuleMap -> [Int] -> Bool
-isValidRow rules row = all (\(a, b) -> case elemIndex a row of
-                                         Just posA -> maybe True (> posA) (elemIndex b row)
-                                         Nothing -> True) (flattenRules rules)
+isValidRow rules row = all (\(a, b) -> maybe True (> fromMaybe (-1) (elemIndex a row)) (elemIndex b row)) (flattenRules rules)
 
 customCompare :: RuleMap -> Int -> Int -> Ordering
-customCompare rules x y
-  | x `comesBefore` y = LT
-  | y `comesBefore` x = GT
-  | otherwise         = EQ
-  where
-    comesBefore a b = b `elem` (Map.findWithDefault [] a rules)
+customCompare rules x y = if x `elem` (Map.findWithDefault [] y rules) then LT else GT
 
 dynamicSort :: RuleMap -> [Int] -> [Int]
 dynamicSort rules = sortBy (customCompare rules)

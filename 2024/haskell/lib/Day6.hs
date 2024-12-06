@@ -1,5 +1,7 @@
 module Day6 (run) where
 
+import Debug.Trace (trace)
+
 import Data.Array.Unboxed (assocs, bounds, inRange, (!), (//))
 import Data.List (nub)
 import qualified Data.Set as Set
@@ -40,7 +42,9 @@ allPossibilities :: Grid -> [Grid]
 allPossibilities grid = [grid // [(pos, '#')] | pos <- Set.toList $ getVisited grid (startPos '^' grid) (-1, 0) Set.empty, grid ! pos == '.']
 
 newDir :: Grid -> Position -> Direction -> Direction
-newDir grid (y,x) dir = if (nextChar grid (y,x) dir) == '#' then turnRight dir else dir
+newDir grid (y,x) dir
+    | nextChar grid (y,x) dir == '#' = newDir grid (y,x) (turnRight dir)
+    | otherwise = dir
 
 nextChar :: Grid -> Position -> Direction -> Char
 nextChar grid (y,x) dir = grid ! (y + fst dir, x + snd dir)

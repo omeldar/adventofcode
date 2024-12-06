@@ -21,26 +21,26 @@ part2 :: Grid -> Int
 part2 grid = length $ filter (\g -> isLoop g (startPos '^' g) (-1, 0) Set.empty) $ allPossibilities grid
 
 getVisited :: Grid -> Position -> Direction -> PositionSet -> PositionSet
-getVisited grid (y,x) dir visited
-    | isNextOut grid (y,x) dir = Set.insert (y,x) visited
-    | otherwise = getVisited grid (y + fst newDir', x + snd newDir') newDir' (Set.insert (y,x) visited)
-    where newDir' = newDir grid (y, x) dir
+getVisited grid p@(y,x) dir visited
+    | isNextOut grid (y,x) dir = Set.insert p visited
+    | otherwise = getVisited grid (y + fst newDir', x + snd newDir') newDir' (Set.insert p visited)
+    where newDir' = newDir grid p dir
 
 isLoop :: Grid -> Position -> Direction -> Set.Set (Position, Direction) -> Bool
-isLoop grid (y,x) dir visited
-    | isNextOut grid (y,x) dir = False
+isLoop grid p@(y,x) dir visited
+    | isNextOut grid p dir = False
     | ifCurrVisited = True
-    | otherwise = isLoop grid (y + fst newDir', x + snd newDir') newDir' (Set.insert ((y, x), dir) visited)
+    | otherwise = isLoop grid (y + fst newDir', x + snd newDir') newDir' (Set.insert (p, dir) visited)
     where
-        ifCurrVisited = Set.member ((y, x), dir) visited
-        newDir' = newDir grid (y, x) dir
+        ifCurrVisited = Set.member (p, dir) visited
+        newDir' = newDir grid p dir
 
 allPossibilities :: Grid -> [Grid]
 allPossibilities grid = [grid // [(pos, '#')] | pos <- Set.toList $ getVisited grid (startPos '^' grid) (-1, 0) Set.empty, grid ! pos == '.']
 
 newDir :: Grid -> Position -> Direction -> Direction
-newDir grid (y,x) dir
-    | nextChar grid (y,x) dir == '#' = newDir grid (y,x) (turnRight dir)
+newDir grid pos dir
+    | nextChar grid pos dir == '#' = newDir grid pos (turnRight dir)
     | otherwise = dir
 
 nextChar :: Grid -> Position -> Direction -> Char

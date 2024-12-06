@@ -1,7 +1,5 @@
 module Day6 (run) where
 
-import Debug.Trace (trace)
-
 import Data.Array.Unboxed (assocs, bounds, inRange, (!), (//))
 import Data.List (nub)
 import qualified Data.Set as Set
@@ -15,7 +13,7 @@ run :: String -> IO ()
 run filePath = do
     grid <- createGrid <$> readFile filePath
     print $ part1 grid
-    print $ part2 grid
+    print $ part2 grid  -- ~3s compiled
 
 part1 :: Grid -> Int
 part1 grid = Set.size $ getVisited grid (startPos '^' grid) (-1, 0) Set.empty

@@ -2,40 +2,42 @@ module Day6 (run) where
 
 import Data.Array.Unboxed (assocs, bounds, inRange, (!), (//))
 import Data.List (nub)
+import qualified Data.Set as Set
 import Common (createGrid, Grid)
 
 type Position = (Int, Int)
 type Direction = (Int, Int)
+type PositionSet = Set.Set Position
 
 run :: String -> IO ()
 run filePath = do
     grid <- createGrid <$> readFile filePath
     print $ part1 grid
-    print $ part2 grid  -- ~6 min
+    print $ part2 grid
 
 part1 :: Grid -> Int
-part1 grid = length $ getVisited grid (startPos '^' grid) (-1, 0) []
+part1 grid = Set.size $ getVisited grid (startPos '^' grid) (-1, 0) Set.empty
 
 part2 :: Grid -> Int
-part2 grid = length $ filter (\g -> isLoop g (startPos '^' g) (-1, 0) []) $ allPossibilities grid
+part2 grid = length $ filter (\g -> isLoop g (startPos '^' g) (-1, 0) Set.empty) $ allPossibilities grid
 
-getVisited :: Grid -> Position -> Direction -> [Position] -> [Position]
+getVisited :: Grid -> Position -> Direction -> PositionSet -> PositionSet
 getVisited grid (y,x) dir visited
-    | isNextOut grid (y,x) dir = nub ((y,x) : visited)
-    | otherwise = getVisited grid (y + fst newDir', x + snd newDir') newDir' ((y,x) : visited)
+    | isNextOut grid (y,x) dir = Set.insert (y,x) visited
+    | otherwise = getVisited grid (y + fst newDir', x + snd newDir') newDir' (Set.insert (y,x) visited)
     where newDir' = newDir grid (y, x) dir
 
-isLoop :: Grid -> Position -> Direction -> [(Position, Direction)] -> Bool
+isLoop :: Grid -> Position -> Direction -> Set.Set (Position, Direction) -> Bool
 isLoop grid (y,x) dir visited
     | isNextOut grid (y,x) dir = False
     | ifCurrVisited = True
-    | otherwise = isLoop grid (y + fst newDir', x + snd newDir') newDir' (((y, x), dir) : visited)
+    | otherwise = isLoop grid (y + fst newDir', x + snd newDir') newDir' (Set.insert ((y, x), dir) visited)
     where
-        ifCurrVisited = any (\r -> r == ((y,x), dir)) visited
+        ifCurrVisited = Set.member ((y, x), dir) visited
         newDir' = newDir grid (y, x) dir
 
 allPossibilities :: Grid -> [Grid]
-allPossibilities grid = [grid // [(pos, '#')] | (pos,val) <- assocs grid, val == '.']
+allPossibilities grid = [grid // [(pos, '#')] | pos <- Set.toList $ getVisited grid (startPos '^' grid) (-1, 0) Set.empty, grid ! pos == '.']
 
 newDir :: Grid -> Position -> Direction -> Direction
 newDir grid (y,x) dir = if (nextChar grid (y,x) dir) == '#' then turnRight dir else dir

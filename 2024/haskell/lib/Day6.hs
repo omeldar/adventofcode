@@ -1,7 +1,6 @@
-module Day6 (run) where
+module Day6 (run, part1, part2) where
 
 import Data.Array.Unboxed (assocs, bounds, inRange, (!), (//))
-import Data.List (nub)
 import qualified Data.Set as Set
 import Common (createGrid, Grid)
 

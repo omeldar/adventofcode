@@ -1,13 +1,13 @@
 module Main where
 
 import System.Environment (getArgs)
-import qualified DayTest as DT (run)
 import qualified Day1 as D1 (run)
 import qualified Day2 as D2 (run)
 import qualified Day3 as D3 (run)
 import qualified Day4 as D4 (run)
 import qualified Day5 as D5 (run)
 import qualified Day6 as D6 (run)
+import qualified Day7 as D7 (run)
 
 inputPath :: String
 inputPath = "input.txt"
@@ -21,10 +21,6 @@ main = do
     _      -> putStrLn "Invalid number of arguments. Provide exactly one day."
 
 runDay :: String -> IO ()
--- cabal run day test
-runDay "test" = do
-    runWithInput DT.run
-
 runDay "1" = do
     runWithInput D1.run
 
@@ -42,6 +38,9 @@ runDay "5" = do
 
 runDay "6" = do
     runWithInput D6.run
+
+runDay "7" = do
+    runWithInput D7.run
 
 -- catch the rest
 runDay day = putStrLn $ "Unknown day: " ++ day

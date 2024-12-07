@@ -7,16 +7,17 @@ run :: String -> IO ()
 run filePath = do
     content <- parse <$> readFile filePath
     print $ part1 content
-    print $ part2 content
+    print $ part2 content  -- ~4s
 
 part1 :: [(Int, [Int])] -> Int
-part1 entries = sum $ map fst $ filter (\(target, numbers) -> isResolvableP1Dp numbers target) entries
+part1 entries = sum $ map fst $ filter (\(target, numbers) -> isResolvableDp numbers target) entries
 
 part2 :: [(Int, [Int])] -> Int
-part2 entries = sum $ map fst $ filter (\(target, numbers) -> isResolvableP2Dp numbers target) entries
+part2 entries = sum $ map fst $ filter (\(target, numbers) -> isResolvableWithConcatDp numbers target) entries
 
-isResolvableP1Dp :: [Int] -> Int -> Bool
-isResolvableP1Dp numbers target = dfs 1 (head numbers) Map.empty
+-- used a DP approach because I feared part 2 
+isResolvableDp :: [Int] -> Int -> Bool
+isResolvableDp numbers target = dfs 1 (head numbers) Map.empty
   where
     dfs :: Int -> Int -> Map.Map (Int, Int) Bool -> Bool
     dfs index currentValue memo
@@ -29,8 +30,8 @@ isResolvableP1Dp numbers target = dfs 1 (head numbers) Map.empty
               newMemo = Map.insert (index, currentValue) result memo
           in result
 
-isResolvableP2Dp :: [Int] -> Int -> Bool
-isResolvableP2Dp numbers target = dfs 1 (head numbers) Map.empty
+isResolvableWithConcatDp :: [Int] -> Int -> Bool
+isResolvableWithConcatDp numbers target = dfs 1 (head numbers) Map.empty
     where
         dfs :: Int -> Int -> Map.Map (Int, Int) Bool -> Bool
         dfs index currentValue memo

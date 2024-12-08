@@ -9,12 +9,15 @@ import Data.List (nub)
 run :: String -> IO ()
 run filePath = do
     content <- createGrid <$> readFile filePath
+    print $ collectAntinodes content
     print $ Set.size $ collectAntinodes content
 
 findAntinodes :: Point -> Point -> [Point]
 findAntinodes (y1, x1) (y2, x2) =
-    let antinode1 = (x1 + round (fromIntegral (x2 - x1) * (-1)), y1 + round (fromIntegral (y2 - y1) * (-1)))
-        antinode2 = (x1 + round (fromIntegral (x2 - x1) * 2), y1 + round (fromIntegral (y2 - y1) * 2))
+    let dy = y2 - y1
+        dx = x2 - x1
+        antinode1 = (y1 - dy, x1 - dx)
+        antinode2 = (y2 + dy, x2 + dx)
     in [antinode1, antinode2]
 
 collectAntinodes :: Grid -> Set Point

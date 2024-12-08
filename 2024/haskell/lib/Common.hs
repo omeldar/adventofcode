@@ -18,4 +18,4 @@ createGrid content =
     in UA.listArray ((0, 0), (rows - 1, cols - 1)) $ concat $ lines content
 
 inBounds :: Point -> (Int, Int) -> Bool
-inBounds (x, y) (rows, cols) = x >= 0 && x < rows && y >= 0 && y < cols
+inBounds (x, y) (rows, cols) = x >= 0 && x <= rows && y >= 0 && y <= cols

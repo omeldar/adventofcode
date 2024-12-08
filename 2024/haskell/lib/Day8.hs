@@ -12,12 +12,10 @@ run filePath = do
     print $ Set.size $ collectAntinodes content
 
 findAntinodes :: Point -> Point -> [Point]
-findAntinodes (y1, x1) (y2, x2)
-    | x1 == x2 && y1 == y2 = []
-    | otherwise =
-        let antinode1 = (x1 + round (fromIntegral (x2 - x1) * (-1)), y1 + round (fromIntegral (y2 - y1) * (-1)))
-            antinode2 = (x1 + round (fromIntegral (x2 - x1) * 2), y1 + round (fromIntegral (y2 - y1) * 2))
-        in [antinode1, antinode2]
+findAntinodes (y1, x1) (y2, x2) =
+    let antinode1 = (x1 + round (fromIntegral (x2 - x1) * (-1)), y1 + round (fromIntegral (y2 - y1) * (-1)))
+        antinode2 = (x1 + round (fromIntegral (x2 - x1) * 2), y1 + round (fromIntegral (y2 - y1) * 2))
+    in [antinode1, antinode2]
 
 collectAntinodes :: Grid -> Set Point
 collectAntinodes grid =

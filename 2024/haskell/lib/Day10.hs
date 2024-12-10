@@ -3,7 +3,6 @@ module Day10 (run) where
 import Common (createIntGrid, IntGrid)
 import qualified Data.Array.Unboxed as UA
 import qualified Data.Set as Set
-import Data.List (foldl')
 
 type Position = (Int, Int)
 type PValue = (Position, Int)
@@ -15,19 +14,27 @@ run filePath = do
 
 trails :: IntGrid -> Int
 trails grid = 
-    let findRoutes pos = traverseFrom grid (pos, 0)
-    in sum $ map length $ map (Set.toList . Set.fromList) $ map findRoutes $ zeroes grid
+    let startPositions = zeroes grid
+        trailheadScores = map (scoreTrailhead grid) startPositions
+    in sum trailheadScores
 
-traverseFrom :: IntGrid -> PValue -> [[Position]]
-traverseFrom grid (currPos, currValue)
-    | currValue == 9 = [[currPos]]
-    | otherwise = [currPos : route | nextPos <- allOneHigher grid (currPos, currValue), route <- traverseFrom grid (nextPos, currValue + 1)]
+scoreTrailhead :: IntGrid -> Position -> Int
+scoreTrailhead grid startPos =
+    let reachableNines = findNines grid (startPos, 0)
+    in Set.size reachableNines
+
+findNines :: IntGrid -> PValue -> Set.Set Position
+findNines grid (currPos, currValue)
+    | currValue == 9 = Set.singleton currPos -- Stop at 9 and collect the position
+    | otherwise = 
+        let nextPositions = allOneHigher grid (currPos, currValue)
+        in Set.unions [findNines grid (nextPos, currValue + 1) | nextPos <- nextPositions]
 
 allOneHigher :: IntGrid -> PValue -> [Position]
 allOneHigher grid (currPos, currVal) = filter (\pos -> (grid UA.! pos) == currVal + 1) $ getPosAround grid currPos
 
 getPosAround :: IntGrid -> Position -> [Position]
-getPosAround grid (y,x) = filter (UA.inRange $ UA.bounds grid) $ [(y, x-1), (y, x+1), (y-1, x), (y+1, x)] 
+getPosAround grid (y, x) = filter (UA.inRange $ UA.bounds grid) [(y, x-1), (y, x+1), (y-1, x), (y+1, x)]
 
 zeroes :: IntGrid -> [Position]
 zeroes grid = [pos | pos <- UA.range $ UA.bounds grid, grid UA.! pos == 0]

@@ -11,22 +11,28 @@ run :: String -> IO ()
 run filePath = do
     grid <- createIntGrid <$> readFile filePath
     print $ trails grid
+    print $ distinctTrails grid
 
 trails :: IntGrid -> Int
-trails grid = 
-    let startPositions = zeroes grid
-        trailheadScores = map (scoreTrailhead grid) startPositions
-    in sum trailheadScores
+trails grid = sum $ map (scoreTrailhead grid) $ zeroes grid
+
+distinctTrails :: IntGrid -> Int
+distinctTrails grid =
+    let findRoutes pos = traverseFrom grid (pos, 0)
+    in sum $ map ((length . Set.toList . Set.fromList) . findRoutes) (zeroes grid)
+
+traverseFrom :: IntGrid -> PValue -> [[Position]]
+traverseFrom grid (currPos, currValue)
+    | currValue == 9 = [[currPos]]
+    | otherwise = [currPos : route | nextPos <- allOneHigher grid (currPos, currValue), route <- traverseFrom grid (nextPos, currValue + 1)]
 
 scoreTrailhead :: IntGrid -> Position -> Int
-scoreTrailhead grid startPos =
-    let reachableNines = findNines grid (startPos, 0)
-    in Set.size reachableNines
+scoreTrailhead grid startPos = Set.size $ findNines grid (startPos, 0)
 
 findNines :: IntGrid -> PValue -> Set.Set Position
 findNines grid (currPos, currValue)
     | currValue == 9 = Set.singleton currPos -- Stop at 9 and collect the position
-    | otherwise = 
+    | otherwise =
         let nextPositions = allOneHigher grid (currPos, currValue)
         in Set.unions [findNines grid (nextPos, currValue + 1) | nextPos <- nextPositions]
 

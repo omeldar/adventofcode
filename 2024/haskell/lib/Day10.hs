@@ -31,10 +31,8 @@ scoreTrailhead grid startPos = Set.size $ findNines grid (startPos, 0)
 
 findNines :: IntGrid -> PValue -> Set.Set Position
 findNines grid (currPos, currValue)
-    | currValue == 9 = Set.singleton currPos -- Stop at 9 and collect the position
-    | otherwise =
-        let nextPositions = allOneHigher grid (currPos, currValue)
-        in Set.unions [findNines grid (nextPos, currValue + 1) | nextPos <- nextPositions]
+    | currValue == 9 = Set.singleton currPos
+    | otherwise = Set.unions [findNines grid (nextPos, currValue + 1) | nextPos <- allOneHigher grid (currPos, currValue)]
 
 allOneHigher :: IntGrid -> PValue -> [Position]
 allOneHigher grid (currPos, currVal) = filter (\pos -> (grid UA.! pos) == currVal + 1) $ getPosAround grid currPos

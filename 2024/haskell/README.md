@@ -16,6 +16,7 @@ Here you'll find a summary of my solved puzzles during the 2024 event.
 - [Day 8](./lib/Day8.hs)
 - [Day 9](./lib/Day9.hs)
 - [Day 10](./lib/Day10.hs)
+- [Day 11](./lib/Day11.hs)
 
 ## Setup
 

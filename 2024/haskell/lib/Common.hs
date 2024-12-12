@@ -1,4 +1,15 @@
-module Common (countOccs, getMiddle, createGrid, Grid, inBounds, Point, createIntGrid, IntGrid) where
+module Common (
+    countOccs, 
+    getMiddle, 
+    createGrid, 
+    Grid, 
+    inBounds, 
+    Point, 
+    createIntGrid, 
+    IntGrid,
+    rmLeadingZeroes
+    ) 
+where
 
 import qualified Data.Array.Unboxed as UA
 
@@ -27,3 +38,7 @@ createIntGrid content =
 
 inBounds :: Point -> (Int, Int) -> Bool
 inBounds (x, y) (rows, cols) = x >= 0 && x <= rows && y >= 0 && y <= cols
+
+rmLeadingZeroes :: String -> String
+rmLeadingZeroes s   | all (== '0') s = "0"
+                    | otherwise     = dropWhile (== '0') s
